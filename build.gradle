@@ -1,0 +1,21 @@
+plugins {
+    id 'org.springframework.boot' version '2.7.3'
+    id 'io.spring.dependency-management' version '1.0.13.RELEASE'
+    id 'java'
+    id 'java-library'
+}
+
+allprojects {
+    group = 'by.pashkevich.mikhail'
+    version = '0.0.1-SNAPSHOT'
+
+    compileJava {
+        sourceCompatibility = 17
+        targetCompatibility = 17
+    }
+
+    repositories {
+        mavenCentral()
+    }
+}
+
