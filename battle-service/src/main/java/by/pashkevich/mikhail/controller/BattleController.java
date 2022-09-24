@@ -1,8 +1,7 @@
 package by.pashkevich.mikhail.controller;
 
-import by.pashkevich.mikhail.model.Battle;
-import by.pashkevich.mikhail.model.Field;
-import by.pashkevich.mikhail.model.Step;
+import by.pashkevich.mikhail.model.dto.BattleDto;
+import by.pashkevich.mikhail.model.dto.StepDto;
 import by.pashkevich.mikhail.service.BattleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,22 +20,22 @@ public class BattleController {
 
 
     @GetMapping("/new-battle")
-    public Battle newBattle() {
+    public BattleDto newBattle() {
         return battleService.createNewBattle();
     }
 
-    @GetMapping("/exist-battle")
-    public Battle existBattle() {
-        return battleService.getExistBattle();
+    @GetMapping("/connect-to-battle")
+    public BattleDto connectToBattle() {
+        return battleService.connectToBattle();
     }
 
     @PostMapping("/make-move")
-    public Battle makeMove(Battle battle, Step step) {
-        return battleService.makeMove(battle, step);
+    public BattleDto makeMove(BattleDto battleDto, StepDto stepDto) {
+        return battleService.makeMove(battleDto, stepDto);
     }
 
     @GetMapping("/opened-now")
-    public List<Battle> openedNow() {
+    public List<BattleDto> openedNow() {
         return battleService.getOpenBattles();
     }
 }

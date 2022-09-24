@@ -1,14 +1,15 @@
 package by.pashkevich.mikhail.service;
 
-import by.pashkevich.mikhail.model.Field;
-import by.pashkevich.mikhail.model.Step;
-import by.pashkevich.mikhail.model.Value;
+import by.pashkevich.mikhail.model.dto.FieldDto;
+import by.pashkevich.mikhail.model.dto.StepDto;
+import by.pashkevich.mikhail.model.entity.Field;
+import by.pashkevich.mikhail.model.entity.enums.Value;
 import org.springframework.stereotype.Service;
 
 @Service
 public class FieldService {
 
-    public Field move(Field field, Step step, Value value) {
+    public Field move(FieldDto fieldDto, StepDto stepDto, Value value) {
         //check is win before a move
         //check is field and step correct
         //make move
@@ -16,7 +17,7 @@ public class FieldService {
         return null;
     }
 
-    private boolean isWin(Field field,Value value) {
+    private boolean isWin(Field field, Value value) {
         return false;
     }
 
@@ -24,7 +25,7 @@ public class FieldService {
         return false;
     }
 
-    private boolean isCorrectStep(Field field, Step step) {
+    private boolean isCorrectStep(Field field, StepDto stepDto) {
         return false;
     }
 }

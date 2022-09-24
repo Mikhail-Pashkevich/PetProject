@@ -1,7 +1,7 @@
 package by.pashkevich.mikhail.service;
 
-import by.pashkevich.mikhail.model.Battle;
-import by.pashkevich.mikhail.model.Step;
+import by.pashkevich.mikhail.model.dto.BattleDto;
+import by.pashkevich.mikhail.model.dto.StepDto;
 import by.pashkevich.mikhail.repository.BattleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,21 +17,21 @@ public class BattleService {
     private final FieldService fieldService;
 
 
-    public Battle createNewBattle() {
+    public BattleDto createNewBattle() {
         return null;
     }
 
-    public Battle getExistBattle() {
+    public BattleDto connectToBattle() {
         return null;
     }
 
-    public List<Battle> getOpenBattles() {
+    public List<BattleDto> getOpenBattles() {
         return null;
     }
 
-    public Battle makeMove(Battle battle, Step step) {
+    public BattleDto makeMove(BattleDto battleDto, StepDto stepDto) {
         //get value from authorized user
-        fieldService.move(battle.getField(), step, null);
+        fieldService.move(battleDto.getFieldDto(), stepDto, null);
 
         return null;
     }
