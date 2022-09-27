@@ -9,5 +9,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class FieldDto {
-    private Value[][] array;
+    private Long id;
+    private Value[][] field;
 }

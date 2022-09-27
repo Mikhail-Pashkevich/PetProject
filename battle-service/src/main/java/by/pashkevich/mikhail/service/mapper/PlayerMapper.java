@@ -2,12 +2,11 @@ package by.pashkevich.mikhail.service.mapper;
 
 import by.pashkevich.mikhail.model.User;
 import by.pashkevich.mikhail.model.dto.PlayerDto;
-import by.pashkevich.mikhail.model.entity.Player;
+import org.mapstruct.Mapper;
 
+@Mapper(componentModel = "spring")
 public interface PlayerMapper {
-    Player toPlayer(User user);
+    User toUser(PlayerDto playerDto);
 
-    Player toPlayer(PlayerDto playerDto);
-
-    PlayerDto toPlayerDto(Player player);
+    PlayerDto toPlayerDto(User user);
 }

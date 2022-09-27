@@ -10,4 +10,6 @@ import lombok.NoArgsConstructor;
 public class BattleDto {
     private Long id;
     private FieldDto fieldDto;
+    private PlayerDto playerDtoX;
+    private PlayerDto playerDtoO;
 }
