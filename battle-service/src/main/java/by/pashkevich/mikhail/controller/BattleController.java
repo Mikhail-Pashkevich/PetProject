@@ -1,13 +1,9 @@
 package by.pashkevich.mikhail.controller;
 
 import by.pashkevich.mikhail.model.dto.BattleDto;
-import by.pashkevich.mikhail.model.dto.StepDto;
 import by.pashkevich.mikhail.service.BattleService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -15,27 +11,26 @@ import java.util.List;
 @RequestMapping("/battle")
 @RequiredArgsConstructor
 public class BattleController {
-
     private final BattleService battleService;
 
 
-    @GetMapping("/new-battle")
-    public BattleDto newBattle() {
-        return battleService.createNewBattle();
+    @PostMapping(headers = "create")
+    public BattleDto create() {
+        return battleService.create();
     }
 
-    @GetMapping("/connect-to-battle")
-    public BattleDto connectToBattle() {
-        return battleService.connectToBattle();
+    @PostMapping(headers = "join")
+    public BattleDto join() {
+        return battleService.join();
     }
 
-    @PostMapping("/make-move")
-    public BattleDto makeMove(BattleDto battleDto, StepDto stepDto) {
-        return battleService.makeMove(battleDto, stepDto);
+    @PostMapping(headers = "move")
+    public BattleDto makeMove(@RequestBody BattleDto battleDto, @RequestHeader("move") Integer step) {
+        return battleService.makeMove(battleDto, step);
     }
 
-    @GetMapping("/opened-now")
+    @GetMapping
     public List<BattleDto> openedNow() {
-        return battleService.getOpenBattles();
+        return battleService.getOpenedNow();
     }
 }

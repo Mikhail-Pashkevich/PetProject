@@ -10,5 +10,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class FieldDto {
     private Long id;
-    private Value[][] field;
+    private Value[] field;
 }

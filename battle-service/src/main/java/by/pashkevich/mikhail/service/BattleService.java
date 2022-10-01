@@ -1,7 +1,6 @@
 package by.pashkevich.mikhail.service;
 
 import by.pashkevich.mikhail.model.dto.BattleDto;
-import by.pashkevich.mikhail.model.dto.StepDto;
 import by.pashkevich.mikhail.repository.BattleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -11,27 +10,26 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class BattleService {
-
     private final BattleRepository battleRepository;
 
     private final FieldService fieldService;
 
 
-    public BattleDto createNewBattle() {
+    public BattleDto create() {
         return null;
     }
 
-    public BattleDto connectToBattle() {
+    public BattleDto join() {
         return null;
     }
 
-    public List<BattleDto> getOpenBattles() {
+    public List<BattleDto> getOpenedNow() {
         return null;
     }
 
-    public BattleDto makeMove(BattleDto battleDto, StepDto stepDto) {
+    public BattleDto makeMove(BattleDto battleDto, Integer step) {
         //get value from authorized user
-        fieldService.move(battleDto.getFieldDto(), stepDto, null);
+        fieldService.move(battleDto.getFieldDto(), step, null);
 
         return null;
     }
