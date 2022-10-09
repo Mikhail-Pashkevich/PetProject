@@ -3,19 +3,19 @@ package by.pashkevich.mikhail.model.entity;
 import by.pashkevich.mikhail.model.entity.enums.Value;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.Arrays;
-
-import static java.util.stream.Collectors.joining;
+import java.util.stream.Collectors;
 
 @Data
 @AllArgsConstructor
-@NoArgsConstructor
 @Entity
 @Table
 public class Field {
+    private static final int FIELD_SIZE = 9;
+
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -24,13 +24,39 @@ public class Field {
     @Convert(converter = FieldConverter.class)
     private Value[] field;
 
+    public Field() {
+        field = new Value[FIELD_SIZE];
+        Arrays.fill(field, Value.VALUE_EMPTY);
+    }
+
+    public boolean isNotFull() {
+        return Arrays.asList(field).contains(Value.VALUE_EMPTY);
+    }
+
+    public boolean isCorrectSizeAndValues() {
+        int counter = 0;
+
+        for (Value value : field) {
+            if (value.equals(Value.VALUE_X)) {
+                counter++;
+            } else if (value.equals(Value.VALUE_O)) {
+                counter--;
+            }
+        }
+
+        return field.length == FIELD_SIZE && (counter == 0 || counter == 1);
+    }
+
+    public boolean isEmpty(int index) {
+        return field[index].equals(Value.VALUE_EMPTY);
+    }
 
     private static class FieldConverter implements AttributeConverter<Value[], String> {
         @Override
         public String convertToDatabaseColumn(Value[] field) {
             return Arrays.stream(field)
                     .map(Enum::toString)
-                    .collect(joining(", "));
+                    .collect(Collectors.joining(", "));
         }
 
         @Override

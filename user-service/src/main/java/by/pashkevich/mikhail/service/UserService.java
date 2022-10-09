@@ -14,4 +14,10 @@ public class UserService {
     public void create(User user) {
         //create user
     }
+
+    public User getByLogin(String login) {
+        return userRepository.findByLogin(login).orElseThrow(() -> {
+            throw new UnsupportedOperationException("Not implemented yet!");
+        });
+    }
 }

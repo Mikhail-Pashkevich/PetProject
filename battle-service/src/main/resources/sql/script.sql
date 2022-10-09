@@ -31,17 +31,22 @@ create table user_roles
 
 create table battle
 (
-    id                    bigint       not null primary key auto_increment,
-    field_id              bigint       not null,
-    battle_status         varchar(100) not null,
-    start_battle_datetime datetime     not null,
-    last_move_datetime    datetime     not null,
-    plyer_x_id            bigint       not null,
-    plyer_o_id            bigint       not null
+    id                     bigint       not null primary key auto_increment,
+    field_id               bigint       not null,
+    battle_status          varchar(100) not null,
+    last_activity_datetime datetime     not null,
+    player_x_id            bigint,
+    player_o_id            bigint
 );
 
 create table field
 (
     id    bigint       not null primary key auto_increment,
-    field varchar(100) not null
+    field varchar(255) not null
 );
+
+
+insert into user(login, password, nickname)
+values ('login1', 'password1', 'nickname1'),
+       ('login2', 'password2', 'nickname2'),
+       ('login3', 'password3', 'nickname3');

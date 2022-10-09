@@ -28,16 +28,20 @@ public class Battle {
     private BattleStatus battleStatus;
 
     @Column
-    private LocalDateTime startBattleDatetime;
-
-    @Column
-    private LocalDateTime lastMoveDatetime;
+    private LocalDateTime lastActivityDatetime;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn
+    @JoinColumn(name = "player_x_id")
     private User playerX;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn
+    @JoinColumn(name = "player_o_id")
     private User playerO;
+
+
+    public Battle(User player) {
+        battleStatus = BattleStatus.WAIT_FOR_PLAYER;
+        lastActivityDatetime = LocalDateTime.now();
+        playerX = player;
+    }
 }
