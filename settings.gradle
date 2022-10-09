@@ -8,4 +8,3 @@ rootProject.name = 'PetProject'
 
 include 'battle-service'
 include 'user-service'
-
