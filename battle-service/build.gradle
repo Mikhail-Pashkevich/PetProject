@@ -7,3 +7,7 @@ dependencies {
 
     implementation 'org.mapstruct:mapstruct:1.5.2.Final'
 }
+
+test {
+    useJUnitPlatform()
+}
