@@ -33,8 +33,18 @@ public class Field {
         return Arrays.asList(field).contains(Value.VALUE_EMPTY);
     }
 
-    public boolean isCorrectSize() {
-        return field.length == FIELD_SIZE;
+    public boolean isCorrectSizeAndValues() {
+        int counter = 0;
+
+        for (Value value : field) {
+            if (value.equals(Value.VALUE_X)) {
+                counter++;
+            } else if (value.equals(Value.VALUE_O)) {
+                counter--;
+            }
+        }
+
+        return field.length == FIELD_SIZE && (counter == 0 || counter == 1);
     }
 
     public boolean isEmpty(int index) {
