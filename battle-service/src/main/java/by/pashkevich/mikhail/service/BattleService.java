@@ -13,6 +13,8 @@ import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 
+import static by.pashkevich.mikhail.model.entity.enums.BattleStatus.*;
+
 @Service
 @RequiredArgsConstructor
 public class BattleService {
@@ -31,23 +33,23 @@ public class BattleService {
     public Battle join(User player) {
         player = userService.getByLogin(player.getLogin());
 
-        Battle battle = battleRepository.findAllByBattleStatus(BattleStatus.WAIT_FOR_PLAYER)
+        Battle battle = battleRepository.findAllByBattleStatus(WAIT_FOR_PLAYER)
                 .stream()
                 .min(Comparator.comparing(Battle::getLastActivityDatetime))
                 .orElse(createAndInsert(player));
 
-        if (battle.getPlayerO() == null) {
+        if (!battle.getPlayerX().equals(player)) {
             battle.setPlayerO(player);
-        } else {
-            battle.setPlayerX(player);
-        }
-        battle.setBattleStatus(BattleStatus.IN_PROGRESS);
+            battle.setBattleStatus(IN_PROGRESS);
 
-        return battleRepository.save(battle);
+            return battleRepository.save(battle);
+        }
+
+        return battle;
     }
 
     public List<Battle> getOpenedNow() {
-        return battleRepository.findAllByBattleStatus(BattleStatus.WAIT_FOR_PLAYER);
+        return battleRepository.findAllByBattleStatus(WAIT_FOR_PLAYER);
     }
 
     public Battle makeMove(Battle battle, Integer step, Value value) {
@@ -55,7 +57,7 @@ public class BattleService {
             throw new UnsupportedOperationException("Not implemented yet!");
         });
 
-        if (battle.getBattleStatus().equals(BattleStatus.FINISHED)) {
+        if (FINISHED.equals(battle.getBattleStatus()) || WAIT_FOR_PLAYER.equals(battle.getBattleStatus())) {
             return battle;
         }
 

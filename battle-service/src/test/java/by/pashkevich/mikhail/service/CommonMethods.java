@@ -1,5 +1,6 @@
 package by.pashkevich.mikhail.service;
 
+import by.pashkevich.mikhail.model.User;
 import by.pashkevich.mikhail.model.entity.enums.Value;
 
 public class CommonMethods {
@@ -13,5 +14,14 @@ public class CommonMethods {
 
     public static Value anyValue() {
         return Value.VALUE_X;
+    }
+
+    public static User anyUser() {
+        User user = new User();
+
+        user.setLogin("anyLogin");
+        user.setPassword("anyPassword");
+
+        return user;
     }
 }

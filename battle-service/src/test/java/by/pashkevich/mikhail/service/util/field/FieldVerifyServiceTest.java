@@ -13,6 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class FieldVerifyServiceTest {
     private static FieldVerifyService fieldVerifyService;
 
+
     @BeforeAll
     public static void beforeAll() {
         fieldVerifyService = new FieldVerifyService();
