@@ -13,7 +13,8 @@ import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 
-import static by.pashkevich.mikhail.model.entity.enums.BattleStatus.*;
+import static by.pashkevich.mikhail.model.entity.enums.BattleStatus.FINISHED;
+import static by.pashkevich.mikhail.model.entity.enums.BattleStatus.WAIT_FOR_PLAYER;
 
 @Service
 @RequiredArgsConstructor
@@ -24,36 +25,55 @@ public class BattleService {
     private final UserService userService;
 
 
-    public Battle create(User player) {
-        player = userService.getByLogin(player.getLogin());
+    public Battle create(Long id, Value value) {
+        User player = userService.getById(id);
 
-        return createAndInsert(player);
-    }
+        Battle battle = new Battle();
 
-    public Battle join(User player) {
-        player = userService.getByLogin(player.getLogin());
+        battle.setBattleStatus(BattleStatus.WAIT_FOR_PLAYER);
+        battle.setLastActivityDatetime(LocalDateTime.now());
 
-        Battle battle = battleRepository.findAllByBattleStatus(WAIT_FOR_PLAYER)
-                .stream()
-                .min(Comparator.comparing(Battle::getLastActivityDatetime))
-                .orElse(createAndInsert(player));
-
-        if (!battle.getPlayerX().equals(player)) {
-            battle.setPlayerO(player);
-            battle.setBattleStatus(IN_PROGRESS);
-
-            return battleRepository.save(battle);
+        switch (value) {
+            case VALUE_X -> battle.setPlayerX(player);
+            case VALUE_O -> battle.setPlayerO(player);
+            default -> throw new IllegalArgumentException("Can't process value: " + value);
         }
 
+        Field field = fieldService.save(new Field());
+
+        battle.setField(field);
+
+        battle = battleRepository.save(battle);
+
         return battle;
+    }
+
+    public Battle join(Long playerId) {
+        User player = userService.getById(playerId);
+
+        Battle battle = battleRepository.findAllByBattleStatus(BattleStatus.WAIT_FOR_PLAYER)
+                .stream()
+                .min(Comparator.comparing(Battle::getLastActivityDatetime))
+                .orElseThrow(() -> {
+                    throw new UnsupportedOperationException("Not implemented yet!");
+                });
+
+        if (battle.getPlayerO() == null) {
+            battle.setPlayerO(player);
+        } else {
+            battle.setPlayerX(player);
+        }
+        battle.setBattleStatus(BattleStatus.IN_PROGRESS);
+
+        return battleRepository.save(battle);
     }
 
     public List<Battle> getOpenedNow() {
         return battleRepository.findAllByBattleStatus(WAIT_FOR_PLAYER);
     }
 
-    public Battle makeMove(Battle battle, Integer step, Value value) {
-        battle = battleRepository.findById(battle.getId()).orElseThrow(() -> {
+    public Battle makeMove(Long battleId, Integer step, Value value) {
+        Battle battle = battleRepository.findById(battleId).orElseThrow(() -> {
             throw new UnsupportedOperationException("Not implemented yet!");
         });
 
@@ -65,16 +85,6 @@ public class BattleService {
 
         battle.setBattleStatus(battleStatus);
         battle.setLastActivityDatetime(LocalDateTime.now());
-
-        return battleRepository.save(battle);
-    }
-
-    private Battle createAndInsert(User player) {
-        Battle battle = new Battle(player);
-
-        Field field = fieldService.save(new Field());
-
-        battle.setField(field);
 
         return battleRepository.save(battle);
     }

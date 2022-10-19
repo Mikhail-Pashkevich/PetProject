@@ -13,6 +13,7 @@ import static by.pashkevich.mikhail.service.util.field.CheckValue.VALUE;
 
 @Service
 public class FieldVerifyService {
+    //TODO: create more generic logic
     private static final List<CheckValue[]> winCombinationList = Arrays.asList(
             new CheckValue[]{VALUE, ANY, ANY, VALUE, ANY, ANY, VALUE, ANY, ANY},    //first column
             new CheckValue[]{ANY, VALUE, ANY, ANY, VALUE, ANY, ANY, VALUE, ANY},    //second column
