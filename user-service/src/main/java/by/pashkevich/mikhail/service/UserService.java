@@ -15,8 +15,8 @@ public class UserService {
         //create user
     }
 
-    public User getByLogin(String login) {
-        return userRepository.findByLogin(login).orElseThrow(() -> {
+    public User getById(Long id) {
+        return userRepository.findById(id).orElseThrow(() -> {
             throw new UnsupportedOperationException("Not implemented yet!");
         });
     }

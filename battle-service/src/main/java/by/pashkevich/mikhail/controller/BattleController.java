@@ -1,8 +1,8 @@
 package by.pashkevich.mikhail.controller;
 
 import by.pashkevich.mikhail.model.dto.BattleDto;
-import by.pashkevich.mikhail.model.dto.PlayerDto;
-import by.pashkevich.mikhail.model.entity.enums.Value;
+import by.pashkevich.mikhail.model.dto.CreateDto;
+import by.pashkevich.mikhail.model.dto.MoveDto;
 import by.pashkevich.mikhail.service.BattleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -16,21 +16,19 @@ public class BattleController {
     private final BattleService battleService;
 
 
-    @PostMapping(headers = "create")
-    public BattleDto create(@RequestBody PlayerDto playerDto) {
-        return battleService.create(playerDto);
+    @PostMapping
+    public BattleDto create(@RequestBody CreateDto createDto) {
+        return battleService.create(createDto.getUserId(), createDto.getValue());
     }
 
-    @PostMapping(headers = "join")
-    public BattleDto join(@RequestBody PlayerDto playerDto) {
-        return battleService.join(playerDto);
+    @PostMapping("/join/{id}")
+    public BattleDto join(@PathVariable Long id) {
+        return battleService.join(id);
     }
 
-    @PostMapping(headers = {"move", "value"})
-    public BattleDto makeMove(@RequestBody BattleDto battleDto,
-                              @RequestHeader("move") Integer step,
-                              @RequestHeader("value") Value value) {
-        return battleService.makeMove(battleDto, step, value);
+    @PostMapping("move")
+    public BattleDto makeMove(@RequestBody MoveDto moveDto) {
+        return battleService.makeMove(moveDto.getBattleId(), moveDto.getStep(), moveDto.getValue());
     }
 
     @GetMapping

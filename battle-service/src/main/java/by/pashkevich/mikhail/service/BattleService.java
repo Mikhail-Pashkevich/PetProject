@@ -2,7 +2,6 @@ package by.pashkevich.mikhail.service;
 
 import by.pashkevich.mikhail.model.User;
 import by.pashkevich.mikhail.model.dto.BattleDto;
-import by.pashkevich.mikhail.model.dto.PlayerDto;
 import by.pashkevich.mikhail.model.entity.Battle;
 import by.pashkevich.mikhail.model.entity.Field;
 import by.pashkevich.mikhail.model.entity.enums.BattleStatus;
@@ -11,7 +10,6 @@ import by.pashkevich.mikhail.repository.BattleRepository;
 import by.pashkevich.mikhail.repository.FieldRepository;
 import by.pashkevich.mikhail.service.mapper.BattleListMapper;
 import by.pashkevich.mikhail.service.mapper.BattleMapper;
-import by.pashkevich.mikhail.service.mapper.PlayerMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -30,26 +28,40 @@ public class BattleService {
 
     private final BattleMapper battleMapper;
     private final BattleListMapper battleListMapper;
-    private final PlayerMapper playerMapper;
 
 
-    public BattleDto create(PlayerDto playerDto) {
-        User player = playerMapper.toUser(playerDto);
-        player = userService.getByLogin(player.getLogin());
+    public BattleDto create(Long id, Value value) {
+        User player = userService.getById(id);
 
-        Battle battle = createAndInsert(player);
+        Battle battle = new Battle();
+
+        battle.setBattleStatus(BattleStatus.WAIT_FOR_PLAYER);
+        battle.setLastActivityDatetime(LocalDateTime.now());
+
+        switch (value) {
+            case VALUE_X -> battle.setPlayerX(player);
+            case VALUE_O -> battle.setPlayerO(player);
+            default -> throw new IllegalArgumentException("Can't process value: " + value);
+        }
+
+        Field field = fieldRepository.save(new Field());
+
+        battle.setField(field);
+
+        battle = battleRepository.save(battle);
 
         return battleMapper.toBattleDto(battle);
     }
 
-    public BattleDto join(PlayerDto playerDto) {
-        User player = playerMapper.toUser(playerDto);
-        player = userService.getByLogin(player.getLogin());
+    public BattleDto join(Long id) {
+        User player = userService.getById(id);
 
         Battle battle = battleRepository.findAllByBattleStatus(BattleStatus.WAIT_FOR_PLAYER)
                 .stream()
                 .min(Comparator.comparing(Battle::getLastActivityDatetime))
-                .orElse(createAndInsert(player));
+                .orElseThrow(() -> {
+                    throw new UnsupportedOperationException("Not implemented yet!");
+                });
 
         if (battle.getPlayerO() == null) {
             battle.setPlayerO(player);
@@ -69,9 +81,8 @@ public class BattleService {
         return battleListMapper.toBattleDtoList(battleList);
     }
 
-    public BattleDto makeMove(BattleDto battleDto, Integer step, Value value) {
-        Battle battle = battleMapper.toBattle(battleDto);
-        battle = battleRepository.findById(battle.getId()).orElseThrow(() -> {
+    public BattleDto makeMove(Long battleId, Integer step, Value value) {
+        Battle battle = battleRepository.findById(battleId).orElseThrow(() -> {
             throw new UnsupportedOperationException("Not implemented yet!");
         });
 
@@ -87,15 +98,5 @@ public class BattleService {
         battleRepository.save(battle);
 
         return battleMapper.toBattleDto(battle);
-    }
-
-    private Battle createAndInsert(User player) {
-        Battle battle = new Battle(player);
-
-        Field field = fieldRepository.save(new Field());
-
-        battle.setField(field);
-
-        return battleRepository.save(battle);
     }
 }

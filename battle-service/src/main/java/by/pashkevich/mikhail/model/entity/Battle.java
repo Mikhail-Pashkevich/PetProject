@@ -37,11 +37,4 @@ public class Battle {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "player_o_id")
     private User playerO;
-
-
-    public Battle(User player) {
-        battleStatus = BattleStatus.WAIT_FOR_PLAYER;
-        lastActivityDatetime = LocalDateTime.now();
-        playerX = player;
-    }
 }

@@ -24,6 +24,7 @@ public class Field {
     @Convert(converter = FieldConverter.class)
     private Value[] field;
 
+    //TODO: move FIELD_SIZE to config entity and rewrite all login about battle area
     public Field() {
         field = new Value[FIELD_SIZE];
         Arrays.fill(field, Value.VALUE_EMPTY);
