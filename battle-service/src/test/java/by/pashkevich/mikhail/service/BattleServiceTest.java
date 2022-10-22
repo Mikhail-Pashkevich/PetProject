@@ -3,6 +3,7 @@ package by.pashkevich.mikhail.service;
 import by.pashkevich.mikhail.model.User;
 import by.pashkevich.mikhail.model.entity.Battle;
 import by.pashkevich.mikhail.model.entity.enums.BattleStatus;
+import by.pashkevich.mikhail.model.entity.enums.Value;
 import by.pashkevich.mikhail.repository.BattleRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -38,11 +39,11 @@ public class BattleServiceTest {
     void create() {
         User anyUser = anyUser();
 
-        Mockito.when(userService.getByLogin(Mockito.any())).thenReturn(anyUser);
+        Mockito.when(userService.getById(Mockito.any())).thenReturn(anyUser);
         Mockito.when(fieldService.save(Mockito.any())).thenAnswer(invocation -> invocation.getArgument(0));
         Mockito.when(battleRepository.save(Mockito.any())).thenAnswer(invocation -> invocation.getArgument(0));
 
-        Battle actualResult = battleService.create(anyUser);
+        Battle actualResult = battleService.create(anyId(), Value.VALUE_X);
 
         assertEquals(anyUser, actualResult.getPlayerX());
         assertNull(actualResult.getPlayerO());
@@ -51,38 +52,47 @@ public class BattleServiceTest {
     }
 
     @Test
-    void join_whenBattlesExists() {
-        User anyUser = anyUser();
-        List<Battle> battleList = List.of(new Battle(new User()));
+    void join_whenUserJoinAsPlayerX() {
+        User playerX = anyUser();
+        playerX.setLogin("playerX");
+        Battle battleWithPlayerO = new Battle();
+        User playerO = anyUser();
+        playerO.setLogin("playerO");
+        battleWithPlayerO.setPlayerO(playerO);
+        List<Battle> battleList = List.of(battleWithPlayerO);
 
-        Mockito.when(userService.getByLogin(Mockito.any())).thenReturn(anyUser);
+        Mockito.when(userService.getById(Mockito.any())).thenReturn(playerX);
         Mockito.when(battleRepository.findAllByBattleStatus(Mockito.any())).thenReturn(battleList);
         Mockito.when(battleRepository.save(Mockito.any())).thenAnswer(invocation -> invocation.getArgument(0));
 
-        Battle actualResult = battleService.join(anyUser);
+        Battle actualResult = battleService.join(anyId());
 
-        assertNotNull(actualResult.getPlayerX());
-        assertNotEquals(anyUser, actualResult.getPlayerX());
-        assertEquals(anyUser, actualResult.getPlayerO());
+        assertNotNull(actualResult.getPlayerO());
+        assertNotEquals(playerX, actualResult.getPlayerO());
+        assertEquals(playerX, actualResult.getPlayerX());
         assertEquals(BattleStatus.IN_PROGRESS, actualResult.getBattleStatus());
     }
 
     @Test
-    void join_whenBattlesNotExists() {
-        User anyUser = anyUser();
-        List<Battle> battleList = List.of();
+    void join_whenUserJoinAsPlayerO() {
+        User playerO = anyUser();
+        playerO.setLogin("playerO");
+        Battle battleWithPlayerX = new Battle();
+        User playerX = anyUser();
+        playerX.setLogin("playerX");
+        battleWithPlayerX.setPlayerX(playerX);
+        List<Battle> battleList = List.of(battleWithPlayerX);
 
-        Mockito.when(userService.getByLogin(Mockito.any())).thenReturn(anyUser);
+        Mockito.when(userService.getById(Mockito.any())).thenReturn(playerO);
         Mockito.when(battleRepository.findAllByBattleStatus(Mockito.any())).thenReturn(battleList);
-        Mockito.when(fieldService.save(Mockito.any())).thenAnswer(invocation -> invocation.getArgument(0));
         Mockito.when(battleRepository.save(Mockito.any())).thenAnswer(invocation -> invocation.getArgument(0));
 
-        Battle actualResult = battleService.join(anyUser);
+        Battle actualResult = battleService.join(anyId());
 
-        assertEquals(anyUser, actualResult.getPlayerX());
-        assertNull(actualResult.getPlayerO());
-        assertNotNull(actualResult.getField());
-        assertEquals(BattleStatus.WAIT_FOR_PLAYER, actualResult.getBattleStatus());
+        assertNotNull(actualResult.getPlayerX());
+        assertNotEquals(playerO, actualResult.getPlayerX());
+        assertEquals(playerO, actualResult.getPlayerO());
+        assertEquals(BattleStatus.IN_PROGRESS, actualResult.getBattleStatus());
     }
 
     @Test
@@ -103,7 +113,7 @@ public class BattleServiceTest {
 
         Mockito.when(battleRepository.findById(Mockito.any())).thenReturn(Optional.of(battle));
 
-        Battle actualResult = battleService.makeMove(battle, anyStep(), anyValue());
+        Battle actualResult = battleService.makeMove(anyId(), anyStep(), anyValue());
 
         assertEquals(battle, actualResult);
     }
@@ -117,7 +127,7 @@ public class BattleServiceTest {
         Mockito.when(fieldService.move(Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(battleStatus);
         Mockito.when(battleRepository.save(Mockito.any())).thenAnswer(invocation -> invocation.getArgument(0));
 
-        Battle actualResult = battleService.makeMove(battle, anyStep(), anyValue());
+        Battle actualResult = battleService.makeMove(anyId(), anyStep(), anyValue());
 
         assertEquals(battleStatus, actualResult.getBattleStatus());
         assertNotNull(actualResult.getLastActivityDatetime());
