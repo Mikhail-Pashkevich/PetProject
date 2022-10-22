@@ -5,7 +5,7 @@ import by.pashkevich.mikhail.model.entity.enums.BattleStatus;
 import by.pashkevich.mikhail.model.entity.enums.Value;
 import by.pashkevich.mikhail.repository.FieldRepository;
 import by.pashkevich.mikhail.service.data.MoveArgumentsProvider;
-import by.pashkevich.mikhail.service.util.field.FieldVerifyServiceImpl;
+import by.pashkevich.mikhail.service.util.field.FieldVerifyService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -19,15 +19,15 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(MockitoExtension.class)
-public class FieldServiceImplTest {
+public class FieldServiceTest {
     @Mock
     private FieldRepository fieldRepository;
 
     @Mock(answer = Answers.CALLS_REAL_METHODS)
-    private FieldVerifyServiceImpl fieldVerifyService;
+    private FieldVerifyService fieldVerifyService;
 
     @InjectMocks
-    private FieldServiceImpl fieldService;
+    private FieldService fieldService;
 
 
     @ParameterizedTest

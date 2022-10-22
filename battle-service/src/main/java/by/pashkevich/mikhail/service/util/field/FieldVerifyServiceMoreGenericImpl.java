@@ -11,8 +11,7 @@ import java.util.List;
 import static by.pashkevich.mikhail.model.entity.enums.Value.VALUE_EMPTY;
 
 @Service
-public class FieldVerifyServiceMoreGenericImpl implements FieldVerifyService {
-    @Override
+public class FieldVerifyServiceMoreGenericImpl {
     public boolean isWin(Field field, Value value) {
         if (VALUE_EMPTY.equals(value)) {
             return false;
@@ -35,7 +34,6 @@ public class FieldVerifyServiceMoreGenericImpl implements FieldVerifyService {
         return isWin;
     }
 
-    @Override
     public boolean isCorrect(Field field) {
         return field.isNotFull() && field.isCorrectSize() && isCorrectValues(field.getField());
     }

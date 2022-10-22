@@ -21,7 +21,7 @@ import static by.pashkevich.mikhail.service.CommonMethods.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
-public class BattleServiceImplTest {
+public class BattleServiceTest {
     @Mock
     private BattleRepository battleRepository;
 
@@ -32,7 +32,7 @@ public class BattleServiceImplTest {
     private FieldService fieldService;
 
     @InjectMocks
-    private BattleServiceImpl battleService;
+    private BattleService battleService;
 
 
     @Test
