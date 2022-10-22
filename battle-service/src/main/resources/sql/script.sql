@@ -1,11 +1,11 @@
 drop
-database if exists PetProject;
+    database if exists PetProject;
 
 create
-database PetProject;
+    database PetProject;
 
 use
-PetProject;
+    PetProject;
 
 create table user
 (

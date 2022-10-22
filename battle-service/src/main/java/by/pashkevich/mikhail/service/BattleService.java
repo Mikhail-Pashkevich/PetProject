@@ -1,15 +1,11 @@
 package by.pashkevich.mikhail.service;
 
 import by.pashkevich.mikhail.model.User;
-import by.pashkevich.mikhail.model.dto.BattleDto;
 import by.pashkevich.mikhail.model.entity.Battle;
 import by.pashkevich.mikhail.model.entity.Field;
 import by.pashkevich.mikhail.model.entity.enums.BattleStatus;
 import by.pashkevich.mikhail.model.entity.enums.Value;
 import by.pashkevich.mikhail.repository.BattleRepository;
-import by.pashkevich.mikhail.repository.FieldRepository;
-import by.pashkevich.mikhail.service.mapper.BattleListMapper;
-import by.pashkevich.mikhail.service.mapper.BattleMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,23 +13,23 @@ import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 
+import static by.pashkevich.mikhail.model.entity.enums.BattleStatus.FINISHED;
+import static by.pashkevich.mikhail.model.entity.enums.BattleStatus.WAIT_FOR_PLAYER;
+
 @Service
 @RequiredArgsConstructor
 public class BattleService {
     private final BattleRepository battleRepository;
-    private final FieldRepository fieldRepository;
 
     private final FieldService fieldService;
     private final UserService userService;
 
-    private final BattleMapper battleMapper;
-    private final BattleListMapper battleListMapper;
 
-
-    public BattleDto create(Long id, Value value) {
+    public Battle create(Long id, Value value) {
         User player = userService.getById(id);
 
         Battle battle = new Battle();
+
 
         battle.setBattleStatus(BattleStatus.WAIT_FOR_PLAYER);
         battle.setLastActivityDatetime(LocalDateTime.now());
@@ -44,17 +40,18 @@ public class BattleService {
             default -> throw new IllegalArgumentException("Can't process value: " + value);
         }
 
-        Field field = fieldRepository.save(new Field());
+        Field field = fieldService.save(new Field());
 
         battle.setField(field);
 
         battle = battleRepository.save(battle);
 
-        return battleMapper.toBattleDto(battle);
+        return battle;
     }
 
-    public BattleDto join(Long id) {
-        User player = userService.getById(id);
+
+    public Battle join(Long playerId) {
+        User player = userService.getById(playerId);
 
         Battle battle = battleRepository.findAllByBattleStatus(BattleStatus.WAIT_FOR_PLAYER)
                 .stream()
@@ -70,24 +67,21 @@ public class BattleService {
         }
         battle.setBattleStatus(BattleStatus.IN_PROGRESS);
 
-        battleRepository.save(battle);
-
-        return battleMapper.toBattleDto(battle);
+        return battleRepository.save(battle);
     }
 
-    public List<BattleDto> getOpenedNow() {
-        List<Battle> battleList = battleRepository.findAllByBattleStatus(BattleStatus.WAIT_FOR_PLAYER);
-
-        return battleListMapper.toBattleDtoList(battleList);
+    public List<Battle> getOpenedNow() {
+        return battleRepository.findAllByBattleStatus(WAIT_FOR_PLAYER);
     }
 
-    public BattleDto makeMove(Long battleId, Integer step, Value value) {
+
+    public Battle makeMove(Long battleId, Integer step, Value value) {
         Battle battle = battleRepository.findById(battleId).orElseThrow(() -> {
             throw new UnsupportedOperationException("Not implemented yet!");
         });
 
-        if (battle.getBattleStatus().equals(BattleStatus.FINISHED)) {
-            return battleMapper.toBattleDto(battle);
+        if (FINISHED.equals(battle.getBattleStatus()) || WAIT_FOR_PLAYER.equals(battle.getBattleStatus())) {
+            return battle;
         }
 
         BattleStatus battleStatus = fieldService.move(battle.getField(), step, value);
@@ -95,8 +89,7 @@ public class BattleService {
         battle.setBattleStatus(battleStatus);
         battle.setLastActivityDatetime(LocalDateTime.now());
 
-        battleRepository.save(battle);
 
-        return battleMapper.toBattleDto(battle);
+        return battleRepository.save(battle);
     }
 }
