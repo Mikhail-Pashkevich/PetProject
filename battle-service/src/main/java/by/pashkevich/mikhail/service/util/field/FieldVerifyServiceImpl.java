@@ -2,6 +2,7 @@ package by.pashkevich.mikhail.service.util.field;
 
 import by.pashkevich.mikhail.model.entity.Field;
 import by.pashkevich.mikhail.model.entity.enums.Value;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
@@ -12,6 +13,7 @@ import static by.pashkevich.mikhail.service.util.field.CheckValue.ANY;
 import static by.pashkevich.mikhail.service.util.field.CheckValue.VALUE;
 
 @Service
+@Primary
 public class FieldVerifyServiceImpl implements FieldVerifyService {
     //TODO: create more generic logic
     private static final List<CheckValue[]> winCombinationList = Arrays.asList(
