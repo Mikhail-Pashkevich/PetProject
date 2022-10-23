@@ -1,10 +1,12 @@
-package by.pashkevich.mikhail.service;
+package by.pashkevich.mikhail.service.impl;
 
 import by.pashkevich.mikhail.model.User;
 import by.pashkevich.mikhail.model.entity.Battle;
 import by.pashkevich.mikhail.model.entity.enums.BattleStatus;
 import by.pashkevich.mikhail.model.entity.enums.Value;
 import by.pashkevich.mikhail.repository.BattleRepository;
+import by.pashkevich.mikhail.service.FieldService;
+import by.pashkevich.mikhail.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -21,7 +23,7 @@ import static by.pashkevich.mikhail.service.CommonMethods.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
-public class BattleServiceTest {
+public class BattleServiceImplTest {
     @Mock
     private BattleRepository battleRepository;
 
@@ -32,7 +34,7 @@ public class BattleServiceTest {
     private FieldService fieldService;
 
     @InjectMocks
-    private BattleService battleService;
+    private BattleServiceImpl battleService;
 
 
     @Test

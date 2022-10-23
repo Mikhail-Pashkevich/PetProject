@@ -1,4 +1,4 @@
-package by.pashkevich.mikhail.service.util.field.data;
+package by.pashkevich.mikhail.service.data;
 
 import by.pashkevich.mikhail.model.entity.Field;
 import by.pashkevich.mikhail.model.entity.enums.Value;

@@ -1,7 +1,10 @@
-package by.pashkevich.mikhail.service.util.field;
+package by.pashkevich.mikhail.service.impl;
 
 import by.pashkevich.mikhail.model.entity.Field;
 import by.pashkevich.mikhail.model.entity.enums.Value;
+import by.pashkevich.mikhail.service.FieldVerifyService;
+import by.pashkevich.mikhail.service.util.field.CheckValue;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
@@ -12,7 +15,8 @@ import static by.pashkevich.mikhail.service.util.field.CheckValue.ANY;
 import static by.pashkevich.mikhail.service.util.field.CheckValue.VALUE;
 
 @Service
-public class FieldVerifyService {
+@Primary
+public class FieldVerifyServiceImpl implements FieldVerifyService {
     //TODO: create more generic logic
     private static final List<CheckValue[]> winCombinationList = Arrays.asList(
             new CheckValue[]{VALUE, ANY, ANY, VALUE, ANY, ANY, VALUE, ANY, ANY},    //first column
@@ -26,6 +30,7 @@ public class FieldVerifyService {
     );
 
 
+    @Override
     public boolean isWin(Field field, Value value) {
         return switch (value) {
             case VALUE_X, VALUE_O -> winCombinationList.stream()
@@ -34,6 +39,7 @@ public class FieldVerifyService {
         };
     }
 
+    @Override
     public boolean isCorrect(Field field) {
         return field.isNotFull() && field.isCorrectSize() && isCorrectValues(field.getField());
     }

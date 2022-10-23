@@ -1,7 +1,8 @@
-package by.pashkevich.mikhail.service.util.field;
+package by.pashkevich.mikhail.service.impl;
 
 import by.pashkevich.mikhail.model.entity.Field;
 import by.pashkevich.mikhail.model.entity.enums.Value;
+import by.pashkevich.mikhail.service.FieldVerifyService;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -11,7 +12,8 @@ import java.util.List;
 import static by.pashkevich.mikhail.model.entity.enums.Value.VALUE_EMPTY;
 
 @Service
-public class FieldVerifyServiceMoreGenericImpl {
+public class FieldVerifyServiceMoreGenericImpl implements FieldVerifyService {
+    @Override
     public boolean isWin(Field field, Value value) {
         if (VALUE_EMPTY.equals(value)) {
             return false;
@@ -34,6 +36,7 @@ public class FieldVerifyServiceMoreGenericImpl {
         return isWin;
     }
 
+    @Override
     public boolean isCorrect(Field field) {
         return field.isNotFull() && field.isCorrectSize() && isCorrectValues(field.getField());
     }
