@@ -1,6 +1,5 @@
-package by.pashkevich.mikhail.model.dto;
+package by.pashkevich.mikhail.model.util;
 
-import by.pashkevich.mikhail.model.entity.enums.Value;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,9 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class MoveDto {
-    private Long battleId;
+public class Step {
     private Integer i;
     private Integer j;
-    private Value value;
 }

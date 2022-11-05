@@ -45,8 +45,16 @@ create table field
     field varchar(255) not null
 );
 
+create table field_setting
+(
+    id          bigint  not null primary key auto_increment,
+    row_size    int     not null
+);
 
 insert into user(login, password, nickname)
 values ('login1', 'password1', 'nickname1'),
        ('login2', 'password2', 'nickname2'),
        ('login3', 'password3', 'nickname3');
+
+insert into field_setting(row_size)
+value (3);

@@ -3,6 +3,7 @@ package by.pashkevich.mikhail.service.impl;
 import by.pashkevich.mikhail.model.entity.Field;
 import by.pashkevich.mikhail.model.entity.enums.BattleStatus;
 import by.pashkevich.mikhail.model.entity.enums.Value;
+import by.pashkevich.mikhail.model.util.Step;
 import by.pashkevich.mikhail.repository.FieldRepository;
 import by.pashkevich.mikhail.service.FieldService;
 import by.pashkevich.mikhail.service.FieldVerifyService;
@@ -18,12 +19,14 @@ public class FieldServiceImpl implements FieldService {
 
 
     @Override
-    public BattleStatus move(Field field, Integer step, Value value) {
-        if (!fieldVerifyService.isCorrect(field) || !isCorrectStep(field, step)) {
+    public BattleStatus move(Field field, Step step, Value value) {
+        Value[][] battleArea = field.getBattleArea();
+
+        if (!fieldVerifyService.isCorrectBattleArea(battleArea) || !fieldVerifyService.isCorrectStep(battleArea, step)) {
             return BattleStatus.INTERRUPTED;
         }
 
-        field.getField()[step] = value;
+        field.setValueByStep(value, step);
 
         return fieldVerifyService.isWin(field, value) ? BattleStatus.FINISHED : BattleStatus.IN_PROGRESS;
     }
@@ -31,9 +34,5 @@ public class FieldServiceImpl implements FieldService {
     @Override
     public Field save(Field field) {
         return fieldRepository.save(field);
-    }
-
-    private boolean isCorrectStep(Field field, Integer step) {
-        return 0 <= step && step < field.getField().length && field.isEmpty(step);
     }
 }

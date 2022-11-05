@@ -2,6 +2,7 @@ package by.pashkevich.mikhail.model.entity;
 
 import by.pashkevich.mikhail.model.User;
 import by.pashkevich.mikhail.model.entity.enums.BattleStatus;
+import by.pashkevich.mikhail.model.entity.enums.Value;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -37,4 +38,13 @@ public class Battle {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "player_o_id")
     private User playerO;
+
+
+    public void setPlayerByValue(User player, Value value) {
+        switch (value) {
+            case VALUE_X -> playerX = player;
+            case VALUE_O -> playerO = player;
+            default -> throw new IllegalArgumentException("Can't process value: " + value);
+        }
+    }
 }

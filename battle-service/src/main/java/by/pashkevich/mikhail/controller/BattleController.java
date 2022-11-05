@@ -4,8 +4,10 @@ import by.pashkevich.mikhail.model.dto.BattleDto;
 import by.pashkevich.mikhail.model.dto.CreateDto;
 import by.pashkevich.mikhail.model.dto.MoveDto;
 import by.pashkevich.mikhail.model.entity.Battle;
+import by.pashkevich.mikhail.model.util.Step;
 import by.pashkevich.mikhail.service.BattleService;
 import by.pashkevich.mikhail.service.mapper.BattleMapper;
+import by.pashkevich.mikhail.service.mapper.MoveMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,6 +20,7 @@ public class BattleController {
     private final BattleService battleService;
 
     private final BattleMapper battleMapper;
+    private final MoveMapper moveMapper;
 
 
     @PostMapping
@@ -37,7 +40,9 @@ public class BattleController {
 
     @PostMapping("/move")
     public BattleDto makeMove(@RequestBody MoveDto moveDto) {
-        Battle battle = battleService.makeMove(moveDto.getBattleId(), moveDto.getStep(), moveDto.getValue());
+        Step step = moveMapper.toStep(moveDto);
+
+        Battle battle = battleService.makeMove(moveDto.getBattleId(), step, moveDto.getValue());
 
         return battleMapper.toBattleDto(battle);
     }

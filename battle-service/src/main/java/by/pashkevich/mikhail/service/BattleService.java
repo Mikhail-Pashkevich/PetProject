@@ -2,6 +2,7 @@ package by.pashkevich.mikhail.service;
 
 import by.pashkevich.mikhail.model.entity.Battle;
 import by.pashkevich.mikhail.model.entity.enums.Value;
+import by.pashkevich.mikhail.model.util.Step;
 
 import java.util.List;
 
@@ -12,5 +13,5 @@ public interface BattleService {
 
     List<Battle> getOpenedNow();
 
-    Battle makeMove(Long battleId, Integer step, Value value);
+    Battle makeMove(Long battleId, Step step, Value value);
 }

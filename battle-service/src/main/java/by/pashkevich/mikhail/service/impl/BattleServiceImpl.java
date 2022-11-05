@@ -5,6 +5,7 @@ import by.pashkevich.mikhail.model.entity.Battle;
 import by.pashkevich.mikhail.model.entity.Field;
 import by.pashkevich.mikhail.model.entity.enums.BattleStatus;
 import by.pashkevich.mikhail.model.entity.enums.Value;
+import by.pashkevich.mikhail.model.util.Step;
 import by.pashkevich.mikhail.repository.BattleRepository;
 import by.pashkevich.mikhail.service.BattleService;
 import by.pashkevich.mikhail.service.FieldService;
@@ -16,8 +17,6 @@ import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 
-import static by.pashkevich.mikhail.model.entity.enums.BattleStatus.FINISHED;
-import static by.pashkevich.mikhail.model.entity.enums.BattleStatus.WAIT_FOR_PLAYER;
 
 @Service
 @RequiredArgsConstructor
@@ -30,27 +29,16 @@ public class BattleServiceImpl implements BattleService {
 
     @Override
     public Battle create(Long id, Value value) {
-        User player = userService.getById(id);
-
         Battle battle = new Battle();
+        User player = userService.getById(id);
+        Field field = fieldService.save(new Field());
 
-
+        battle.setPlayerByValue(player, value);
+        battle.setField(field);
         battle.setBattleStatus(BattleStatus.WAIT_FOR_PLAYER);
         battle.setLastActivityDatetime(LocalDateTime.now());
 
-        switch (value) {
-            case VALUE_X -> battle.setPlayerX(player);
-            case VALUE_O -> battle.setPlayerO(player);
-            default -> throw new IllegalArgumentException("Can't process value: " + value);
-        }
-
-        Field field = fieldService.save(new Field());
-
-        battle.setField(field);
-
-        battle = battleRepository.save(battle);
-
-        return battle;
+        return battleRepository.save(battle);
     }
 
     @Override
@@ -76,16 +64,14 @@ public class BattleServiceImpl implements BattleService {
 
     @Override
     public List<Battle> getOpenedNow() {
-        return battleRepository.findAllByBattleStatus(WAIT_FOR_PLAYER);
+        return battleRepository.findAllByBattleStatus(BattleStatus.WAIT_FOR_PLAYER);
     }
 
     @Override
-    public Battle makeMove(Long battleId, Integer step, Value value) {
-        Battle battle = battleRepository.findById(battleId).orElseThrow(() -> {
-            throw new UnsupportedOperationException("Not implemented yet!");
-        });
+    public Battle makeMove(Long battleId, Step step, Value value) {
+        Battle battle = battleRepository.getReferenceById(battleId);
 
-        if (FINISHED.equals(battle.getBattleStatus()) || WAIT_FOR_PLAYER.equals(battle.getBattleStatus())) {
+        if (!battle.getBattleStatus().isActiveBattleStatus()) {
             return battle;
         }
 
@@ -93,7 +79,6 @@ public class BattleServiceImpl implements BattleService {
 
         battle.setBattleStatus(battleStatus);
         battle.setLastActivityDatetime(LocalDateTime.now());
-
 
         return battleRepository.save(battle);
     }

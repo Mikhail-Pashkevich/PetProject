@@ -1,60 +1,102 @@
 package by.pashkevich.mikhail.model.entity;
 
 import by.pashkevich.mikhail.model.entity.enums.Value;
+import by.pashkevich.mikhail.model.util.Step;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table
 public class Field {
-    private static final int FIELD_SIZE = 9;
-
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column
-    @Convert(converter = FieldConverter.class)
-    private Value[] field;
+    @Convert(converter = BattleAreaConverter.class)
+    private Value[][] battleArea;
 
-    //TODO: move FIELD_SIZE to config entity and rewrite all login about battle area
-    public Field() {
-        field = new Value[FIELD_SIZE];
-        Arrays.fill(field, Value.VALUE_EMPTY);
+
+    public List<Value[]> getRows() {
+        return Arrays.stream(battleArea).toList();
     }
 
-    public boolean isNotFull() {
-        return Arrays.asList(field).contains(Value.VALUE_EMPTY);
+    public List<Value[]> getColumns() {
+        List<Value[]> columns = new ArrayList<>();
+
+        for (int i = 0; i < battleArea.length; i++) {
+            Value[] column = new Value[battleArea.length];
+
+            for (int j = 0; j < battleArea.length; j++) {
+                column[j] = battleArea[j][i];
+            }
+
+            columns.add(column);
+        }
+
+        return columns;
     }
 
-    public boolean isCorrectSize() {
-        return field.length == FIELD_SIZE;
+    public Value[] getMainDiagonal() {
+        Value[] diagonal = new Value[battleArea.length];
+
+        for (int i = 0; i < battleArea.length; i++) {
+            diagonal[i] = battleArea[i][i];
+        }
+
+        return diagonal;
     }
 
-    public boolean isEmpty(int index) {
-        return field[index].equals(Value.VALUE_EMPTY);
+    public Value[] getSideDiagonal() {
+        Value[] diagonal = new Value[battleArea.length];
+
+        for (int j = battleArea.length - 1, i = 0; j >= 0; j--, i++) {
+            diagonal[i] = battleArea[i][j];
+        }
+
+        return diagonal;
     }
 
-    private static class FieldConverter implements AttributeConverter<Value[], String> {
+    public void setValueByStep(Value value, Step step) {
+        battleArea[step.getI()][step.getJ()] = value;
+    }
+
+
+    private static class BattleAreaConverter implements AttributeConverter<Value[][], String> {
+        private static final String CELL_SEPARATOR = ",";
+        private static final String ROW_SEPARATOR = ";";
+
+
         @Override
-        public String convertToDatabaseColumn(Value[] field) {
-            return Arrays.stream(field)
-                    .map(Enum::toString)
-                    .collect(Collectors.joining(", "));
+        public String convertToDatabaseColumn(Value[][] battleArea) {
+            //TODO: test if null
+            return Arrays.stream(battleArea)
+                    .map(row -> Arrays.stream(row)
+                            .map(Value::name)
+                            .collect(Collectors.joining(CELL_SEPARATOR))
+                    )
+                    .collect(Collectors.joining(ROW_SEPARATOR));
         }
 
         @Override
-        public Value[] convertToEntityAttribute(String dbData) {
-            return Arrays.stream(dbData.split(", "))
-                    .map(Value::valueOf)
-                    .toArray(Value[]::new);
+        public Value[][] convertToEntityAttribute(String dbData) {
+            //TODO: test if null
+            return Arrays.stream(dbData.split(ROW_SEPARATOR))
+                    .map(row -> Arrays.stream(row.split(CELL_SEPARATOR))
+                            .map(Value::valueOf)
+                            .toArray(Value[]::new)
+                    )
+                    .toArray(Value[][]::new);
         }
     }
 }

@@ -17,7 +17,6 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
-import java.util.Optional;
 
 import static by.pashkevich.mikhail.service.CommonMethods.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -107,13 +106,13 @@ public class BattleServiceImplTest {
     }
 
     @ParameterizedTest
-    @EnumSource(value = BattleStatus.class, names = {"FINISHED", "WAIT_FOR_PLAYER"})
+    @EnumSource(value = BattleStatus.class, names = {"FINISHED", "INTERRUPTED", "WAIT_FOR_PLAYER"})
     void makeMove_whenBattleNotProcessed(BattleStatus battleStatus) {
         Battle battle = new Battle();
 
         battle.setBattleStatus(battleStatus);
 
-        Mockito.when(battleRepository.findById(Mockito.any())).thenReturn(Optional.of(battle));
+        Mockito.when(battleRepository.getReferenceById(Mockito.any())).thenReturn(battle);
 
         Battle actualResult = battleService.makeMove(anyId(), anyStep(), anyValue());
 
@@ -125,7 +124,9 @@ public class BattleServiceImplTest {
     void makeMove_whenBattleProcessed(BattleStatus battleStatus) {
         Battle battle = new Battle();
 
-        Mockito.when(battleRepository.findById(Mockito.any())).thenReturn(Optional.of(battle));
+        battle.setBattleStatus(BattleStatus.IN_PROGRESS);
+
+        Mockito.when(battleRepository.getReferenceById(Mockito.any())).thenReturn(battle);
         Mockito.when(fieldService.move(Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(battleStatus);
         Mockito.when(battleRepository.save(Mockito.any())).thenAnswer(invocation -> invocation.getArgument(0));
 
