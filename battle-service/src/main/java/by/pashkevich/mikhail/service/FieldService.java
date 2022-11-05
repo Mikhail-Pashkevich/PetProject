@@ -8,5 +8,5 @@ import by.pashkevich.mikhail.model.util.Step;
 public interface FieldService {
     BattleStatus move(Field field, Step step, Value value);
 
-    Field save(Field field);
+    Field create();
 }

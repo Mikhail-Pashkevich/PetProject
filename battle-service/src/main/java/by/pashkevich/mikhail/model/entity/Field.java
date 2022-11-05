@@ -27,6 +27,14 @@ public class Field {
     private Value[][] battleArea;
 
 
+    public Field(int rowSize) {
+        battleArea = new Value[rowSize][rowSize];
+
+        for (Value[] row : battleArea) {
+            Arrays.fill(row, Value.VALUE_EMPTY);
+        }
+    }
+
     public List<Value[]> getRows() {
         return Arrays.stream(battleArea).toList();
     }
@@ -79,7 +87,9 @@ public class Field {
 
         @Override
         public String convertToDatabaseColumn(Value[][] battleArea) {
-            //TODO: test if null
+            if (battleArea == null) {
+                return "";
+            }
             return Arrays.stream(battleArea)
                     .map(row -> Arrays.stream(row)
                             .map(Value::name)
@@ -90,7 +100,9 @@ public class Field {
 
         @Override
         public Value[][] convertToEntityAttribute(String dbData) {
-            //TODO: test if null
+            if (dbData.isEmpty()) {
+                return null;
+            }
             return Arrays.stream(dbData.split(ROW_SEPARATOR))
                     .map(row -> Arrays.stream(row.split(CELL_SEPARATOR))
                             .map(Value::valueOf)

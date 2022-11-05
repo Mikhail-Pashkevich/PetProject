@@ -5,6 +5,7 @@ import by.pashkevich.mikhail.model.entity.Battle;
 import by.pashkevich.mikhail.model.entity.enums.BattleStatus;
 import by.pashkevich.mikhail.model.entity.enums.Value;
 import by.pashkevich.mikhail.repository.BattleRepository;
+import by.pashkevich.mikhail.service.CommonMethods;
 import by.pashkevich.mikhail.service.FieldService;
 import by.pashkevich.mikhail.service.UserService;
 import org.junit.jupiter.api.Test;
@@ -41,7 +42,7 @@ public class BattleServiceImplTest {
         User anyUser = anyUser();
 
         Mockito.when(userService.getById(Mockito.any())).thenReturn(anyUser);
-        Mockito.when(fieldService.save(Mockito.any())).thenAnswer(invocation -> invocation.getArgument(0));
+        Mockito.when(fieldService.create()).thenReturn(CommonMethods.anyField());
         Mockito.when(battleRepository.save(Mockito.any())).thenAnswer(invocation -> invocation.getArgument(0));
 
         Battle actualResult = battleService.create(anyId(), Value.VALUE_X);

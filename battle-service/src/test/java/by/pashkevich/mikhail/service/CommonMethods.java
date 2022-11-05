@@ -1,6 +1,7 @@
 package by.pashkevich.mikhail.service;
 
 import by.pashkevich.mikhail.model.User;
+import by.pashkevich.mikhail.model.entity.Field;
 import by.pashkevich.mikhail.model.entity.enums.Value;
 import by.pashkevich.mikhail.model.util.Step;
 
@@ -40,5 +41,9 @@ public class CommonMethods {
         }
 
         return battleArea;
+    }
+
+    public static Field anyField() {
+        return new Field();
     }
 }

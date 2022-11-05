@@ -31,7 +31,7 @@ public class BattleServiceImpl implements BattleService {
     public Battle create(Long id, Value value) {
         Battle battle = new Battle();
         User player = userService.getById(id);
-        Field field = fieldService.save(new Field());
+        Field field = fieldService.create();
 
         battle.setPlayerByValue(player, value);
         battle.setField(field);

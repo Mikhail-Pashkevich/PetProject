@@ -41,8 +41,8 @@ create table battle
 
 create table field
 (
-    id    bigint       not null primary key auto_increment,
-    field varchar(255) not null
+    id          bigint       not null primary key auto_increment,
+    battle_area  varchar(255) not null
 );
 
 create table field_setting

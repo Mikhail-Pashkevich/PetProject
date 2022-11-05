@@ -5,6 +5,7 @@ import by.pashkevich.mikhail.model.entity.enums.BattleStatus;
 import by.pashkevich.mikhail.model.entity.enums.Value;
 import by.pashkevich.mikhail.model.util.Step;
 import by.pashkevich.mikhail.repository.FieldRepository;
+import by.pashkevich.mikhail.repository.FieldSettingRepository;
 import by.pashkevich.mikhail.service.CommonMethods;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,6 +17,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.List;
 import java.util.stream.Stream;
 
 import static by.pashkevich.mikhail.service.CommonMethods.*;
@@ -25,6 +27,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class FieldServiceImplTest {
     @Mock
     private FieldRepository fieldRepository;
+
+    @Mock
+    private FieldSettingRepository fieldSettingRepository;
 
     @Mock(lenient = true)
     private FieldVerifyServiceImpl fieldVerifyService;
@@ -67,11 +72,13 @@ public class FieldServiceImplTest {
     }
 
     @Test
-    public void save() {
-        Field field = new Field();
+    public void create() {
+        int rowSize = 3;
+        Field field = new Field(rowSize);
 
-        Mockito.when(fieldRepository.save(field)).thenReturn(field);
+        Mockito.when(fieldSettingRepository.findAllRowSize()).thenReturn(List.of(rowSize));
+        Mockito.when(fieldRepository.save(field)).thenAnswer(invocation -> invocation.getArgument(0));
 
-        assertEquals(field, fieldService.save(field));
+        assertEquals(field, fieldService.create());
     }
 }
