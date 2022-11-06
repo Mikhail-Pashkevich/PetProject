@@ -1,5 +1,6 @@
 package by.pashkevich.mikhail.service.impl;
 
+import by.pashkevich.mikhail.exception.NotFoundException;
 import by.pashkevich.mikhail.model.User;
 import by.pashkevich.mikhail.model.entity.Battle;
 import by.pashkevich.mikhail.model.entity.Field;
@@ -49,7 +50,7 @@ public class BattleServiceImpl implements BattleService {
                 .stream()
                 .min(Comparator.comparing(Battle::getLastActivityDatetime))
                 .orElseThrow(() -> {
-                    throw new UnsupportedOperationException("Not implemented yet!");
+                    throw new NotFoundException("There any battle with battleStatus = " + BattleStatus.WAIT_FOR_PLAYER);
                 });
 
         if (battle.getPlayerO() == null) {

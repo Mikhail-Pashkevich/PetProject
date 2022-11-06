@@ -1,5 +1,6 @@
 package by.pashkevich.mikhail.service.impl;
 
+import by.pashkevich.mikhail.exception.IncorrectDataException;
 import by.pashkevich.mikhail.model.entity.Field;
 import by.pashkevich.mikhail.model.entity.enums.BattleStatus;
 import by.pashkevich.mikhail.model.entity.enums.Value;
@@ -25,7 +26,7 @@ public class FieldServiceImpl implements FieldService {
         Value[][] battleArea = field.getBattleArea();
 
         if (!fieldVerifyService.isCorrectBattleArea(battleArea) || !fieldVerifyService.isCorrectStep(battleArea, step)) {
-            return BattleStatus.INTERRUPTED;
+            throw new IncorrectDataException("Incorrect battleArea or step");
         }
 
         field.setValueByStep(value, step);
