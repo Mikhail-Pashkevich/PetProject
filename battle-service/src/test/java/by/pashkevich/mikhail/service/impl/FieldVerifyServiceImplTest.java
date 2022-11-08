@@ -3,8 +3,8 @@ package by.pashkevich.mikhail.service.impl;
 import by.pashkevich.mikhail.model.entity.Field;
 import by.pashkevich.mikhail.model.entity.enums.Value;
 import by.pashkevich.mikhail.model.util.Step;
-import by.pashkevich.mikhail.repository.FieldSettingRepository;
 import by.pashkevich.mikhail.service.CommonMethods;
+import by.pashkevich.mikhail.service.SettingService;
 import by.pashkevich.mikhail.service.data.IsCorrectArgumentsProvider;
 import by.pashkevich.mikhail.service.data.IsWinArgumentsProvider;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,7 +18,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.List;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -26,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @ExtendWith(MockitoExtension.class)
 public class FieldVerifyServiceImplTest {
     @Mock(lenient = true)
-    private FieldSettingRepository fieldSettingRepository;
+    private SettingService settingService;
 
     @InjectMocks
     private FieldVerifyServiceImpl fieldVerifyService;
@@ -51,7 +50,7 @@ public class FieldVerifyServiceImplTest {
     @ParameterizedTest
     @ArgumentsSource(IsCorrectArgumentsProvider.class)
     void isCorrectBattleArea(Value[][] battleArea, boolean expectedResult) {
-        Mockito.when(fieldSettingRepository.findAllRowSize()).thenReturn(List.of(3));
+        Mockito.when(settingService.getRowSize()).thenReturn(3);
 
         assertEquals(expectedResult, fieldVerifyService.isCorrectBattleArea(battleArea));
     }

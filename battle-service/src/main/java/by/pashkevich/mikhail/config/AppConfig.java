@@ -1,6 +1,6 @@
 package by.pashkevich.mikhail.config;
 
-import by.pashkevich.mikhail.service.ScheduleSettingService;
+import by.pashkevich.mikhail.service.SettingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,10 +10,10 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableScheduling
 @RequiredArgsConstructor
 public class AppConfig {
-    private final ScheduleSettingService scheduleSettingService;
+    private final SettingService settingService;
 
     @Bean
     public String getFixedRateSetting() {
-        return scheduleSettingService.getFixedRate();
+        return settingService.getFixedRate();
     }
 }

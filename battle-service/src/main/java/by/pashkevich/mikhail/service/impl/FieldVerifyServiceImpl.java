@@ -3,8 +3,8 @@ package by.pashkevich.mikhail.service.impl;
 import by.pashkevich.mikhail.model.entity.Field;
 import by.pashkevich.mikhail.model.entity.enums.Value;
 import by.pashkevich.mikhail.model.util.Step;
-import by.pashkevich.mikhail.repository.FieldSettingRepository;
 import by.pashkevich.mikhail.service.FieldVerifyService;
+import by.pashkevich.mikhail.service.SettingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +14,7 @@ import java.util.Arrays;
 @Service
 @RequiredArgsConstructor
 public class FieldVerifyServiceImpl implements FieldVerifyService {
-    private final FieldSettingRepository fieldSettingRepository;
+    private final SettingService settingService;
 
     @Override
     public boolean isWin(Field field, Value value) {
@@ -56,7 +56,7 @@ public class FieldVerifyServiceImpl implements FieldVerifyService {
     }
 
     private boolean isCorrectSize(Value[][] battleArea) {
-        int rowSize = fieldSettingRepository.findAllRowSize().get(0);
+        int rowSize = settingService.getRowSize();
 
         boolean isCorrect = battleArea.length == rowSize;
         for (Value[] row : battleArea) {

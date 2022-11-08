@@ -6,7 +6,8 @@ import by.pashkevich.mikhail.model.entity.enums.BattleStatus;
 import by.pashkevich.mikhail.model.entity.enums.Value;
 import by.pashkevich.mikhail.model.util.Step;
 import by.pashkevich.mikhail.repository.FieldRepository;
-import by.pashkevich.mikhail.repository.FieldSettingRepository;
+import by.pashkevich.mikhail.service.FieldVerifyService;
+import by.pashkevich.mikhail.service.SettingService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -17,7 +18,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.List;
 import java.util.stream.Stream;
 
 import static by.pashkevich.mikhail.service.CommonMethods.*;
@@ -30,10 +30,10 @@ public class FieldServiceImplTest {
     private FieldRepository fieldRepository;
 
     @Mock
-    private FieldSettingRepository fieldSettingRepository;
+    private SettingService settingService;
 
     @Mock(lenient = true)
-    private FieldVerifyServiceImpl fieldVerifyService;
+    private FieldVerifyService fieldVerifyService;
 
     @InjectMocks
     private FieldServiceImpl fieldService;
@@ -91,7 +91,7 @@ public class FieldServiceImplTest {
         int rowSize = 3;
         Field field = new Field(rowSize);
 
-        Mockito.when(fieldSettingRepository.findAllRowSize()).thenReturn(List.of(rowSize));
+        Mockito.when(settingService.getRowSize()).thenReturn(rowSize);
         Mockito.when(fieldRepository.save(field)).thenAnswer(invocation -> invocation.getArgument(0));
 
         assertEquals(field, fieldService.create());

@@ -17,5 +17,5 @@ public class FieldSetting {
     private Long id;
 
     @Column
-    private int rowSize;
+    private Integer rowSize;
 }

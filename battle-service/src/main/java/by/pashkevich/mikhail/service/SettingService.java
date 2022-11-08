@@ -1,6 +1,8 @@
 package by.pashkevich.mikhail.service;
 
-public interface ScheduleSettingService {
+public interface SettingService {
+    Integer getRowSize();
+
     String getFixedRate();
 
     Integer getMoveWaitingTime();
