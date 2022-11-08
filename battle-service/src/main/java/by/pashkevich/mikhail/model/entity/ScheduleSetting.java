@@ -23,6 +23,10 @@ public class ScheduleSetting {
     @Column
     private String fixedRate;
 
+    /**
+     * See example values as for {@link org.springframework.scheduling.annotation.Scheduled#fixedRateString
+     * org.springframework.scheduling.annotation.Scheduled}
+     */
     @Column
-    private Integer moveWaitingTime;
+    private String moveWaitingTime;
 }

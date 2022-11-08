@@ -7,6 +7,8 @@ import by.pashkevich.mikhail.service.SettingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
+
 @Service
 @RequiredArgsConstructor
 public class SettingServiceImpl implements SettingService {
@@ -37,12 +39,14 @@ public class SettingServiceImpl implements SettingService {
 
     @Override
     public Integer getMoveWaitingTime() {
-        return scheduleSettingRepository.findAll()
+        String moveWaitingTime = scheduleSettingRepository.findAll()
                 .stream()
                 .findFirst()
                 .orElseThrow(() -> {
                     throw new NotFoundException("Can't find any 'move waiting time' config");
                 })
                 .getMoveWaitingTime();
+
+        return Duration.parse(moveWaitingTime).getNano();
     }
 }

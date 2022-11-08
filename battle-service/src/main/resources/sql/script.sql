@@ -55,7 +55,7 @@ create table schedule_setting
 (
     id                  bigint      not null primary key auto_increment,
     fixed_rate          varchar(50) not null,
-    move_waiting_time   int         not null
+    move_waiting_time   varchar(50) not null
 );
 
 insert into user(login, password, nickname)
@@ -67,4 +67,4 @@ insert into field_setting(row_size)
 values (3);
 
 insert into schedule_setting(fixed_rate, move_waiting_time)
-values ('PT2M', 300000);
+values ('PT2M', 'PT2M');

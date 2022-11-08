@@ -4,7 +4,6 @@ import by.pashkevich.mikhail.model.entity.Battle;
 import by.pashkevich.mikhail.model.entity.enums.BattleStatus;
 import by.pashkevich.mikhail.repository.BattleRepository;
 import by.pashkevich.mikhail.service.SettingService;
-import by.pashkevich.mikhail.service.util.datetime.DatetimeUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -23,8 +22,7 @@ public class BattleScheduler {
     @Scheduled(fixedRateString = "#{@getFixedRateSetting}")
     private void changeBattleStatus() {
         Integer moveWaitingTime = settingService.getMoveWaitingTime();
-        long nanos = DatetimeUtil.toNanos(moveWaitingTime);
-        LocalDateTime lastTimeBeforeInterrupt = LocalDateTime.now().minusNanos(nanos);
+        LocalDateTime lastTimeBeforeInterrupt = LocalDateTime.now().minusNanos(moveWaitingTime);
 
         List<Battle> battles = battleRepository.findAll()
                 .stream()
