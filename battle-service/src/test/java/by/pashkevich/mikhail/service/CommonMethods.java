@@ -23,6 +23,7 @@ public class CommonMethods {
     public static User anyUser() {
         User user = new User();
 
+        user.setId(0L);
         user.setLogin("anyLogin");
         user.setPassword("anyPassword");
 

@@ -42,7 +42,7 @@ public class BattleController {
     public BattleDto makeMove(@RequestBody MoveDto moveDto) {
         Step step = moveMapper.toStep(moveDto);
 
-        Battle battle = battleService.makeMove(moveDto.getBattleId(), step, moveDto.getValue());
+        Battle battle = battleService.makeMove(moveDto.getBattleId(), step, moveDto.getUserId());
 
         return battleMapper.toBattleDto(battle);
     }

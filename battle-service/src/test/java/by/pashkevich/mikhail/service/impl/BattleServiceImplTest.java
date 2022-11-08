@@ -115,7 +115,7 @@ public class BattleServiceImplTest {
 
         Mockito.when(battleRepository.getReferenceById(Mockito.any())).thenReturn(battle);
 
-        Battle actualResult = battleService.makeMove(anyId(), anyStep(), anyValue());
+        Battle actualResult = battleService.makeMove(anyId(), anyStep(), anyId());
 
         assertEquals(battle, actualResult);
     }
@@ -124,6 +124,8 @@ public class BattleServiceImplTest {
     @EnumSource(value = BattleStatus.class, names = {"INTERRUPTED", "IN_PROGRESS", "FINISHED"})
     void makeMove_whenBattleProcessed(BattleStatus battleStatus) {
         Battle battle = new Battle();
+        battle.setPlayerX(anyUser());
+        battle.setPlayerO(anyUser());
 
         battle.setBattleStatus(BattleStatus.IN_PROGRESS);
 
@@ -131,7 +133,7 @@ public class BattleServiceImplTest {
         Mockito.when(fieldService.move(Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(battleStatus);
         Mockito.when(battleRepository.save(Mockito.any())).thenAnswer(invocation -> invocation.getArgument(0));
 
-        Battle actualResult = battleService.makeMove(anyId(), anyStep(), anyValue());
+        Battle actualResult = battleService.makeMove(anyId(), anyStep(), anyId());
 
         assertEquals(battleStatus, actualResult.getBattleStatus());
         assertNotNull(actualResult.getLastActivityDatetime());

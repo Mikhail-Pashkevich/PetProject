@@ -69,12 +69,14 @@ public class BattleServiceImpl implements BattleService {
     }
 
     @Override
-    public Battle makeMove(Long battleId, Step step, Value value) {
+    public Battle makeMove(Long battleId, Step step, Long userId) {
         Battle battle = battleRepository.getReferenceById(battleId);
 
         if (!battle.getBattleStatus().isActiveBattleStatus()) {
             return battle;
         }
+
+        Value value = battle.getValueByUserId(userId);
 
         BattleStatus battleStatus = fieldService.move(battle.getField(), step, value);
 

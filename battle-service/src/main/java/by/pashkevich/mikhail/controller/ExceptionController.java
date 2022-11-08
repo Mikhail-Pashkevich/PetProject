@@ -20,8 +20,8 @@ public class ExceptionController {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
-    @ExceptionHandler(value = IncorrectDataException.class)
-    private ResponseExceptionDto handleIncorrectDataException(IncorrectDataException e) {
+    @ExceptionHandler(value = {IncorrectDataException.class, IllegalArgumentException.class})
+    private ResponseExceptionDto handleException(Exception e) {
         return new ResponseExceptionDto(e.getMessage());
     }
 }

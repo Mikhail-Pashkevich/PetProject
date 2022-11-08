@@ -47,4 +47,14 @@ public class Battle {
             default -> throw new IllegalArgumentException("Can't process value: " + value);
         }
     }
+
+    public Value getValueByUserId(Long userId) {
+        if (playerX.getId().equals(userId)) {
+            return Value.VALUE_X;
+        } else if (playerO.getId().equals(userId)) {
+            return Value.VALUE_O;
+        } else {
+            throw new IllegalArgumentException("Can't process userId: " + userId);
+        }
+    }
 }

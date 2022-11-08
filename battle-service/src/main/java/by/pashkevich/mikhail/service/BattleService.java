@@ -13,5 +13,5 @@ public interface BattleService {
 
     List<Battle> getOpenedNow();
 
-    Battle makeMove(Long battleId, Step step, Value value);
+    Battle makeMove(Long battleId, Step step, Long userId);
 }
