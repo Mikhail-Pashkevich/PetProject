@@ -29,10 +29,6 @@ public class CommonMethods {
         return user;
     }
 
-    public static boolean anyBoolean() {
-        return false;
-    }
-
     public static Value[][] anyBattleArea() {
         Value[][] battleArea = new Value[3][3];
 
@@ -45,5 +41,9 @@ public class CommonMethods {
 
     public static Field anyField() {
         return new Field();
+    }
+
+    public static Field anyFieldWithBattleArea() {
+        return new Field(anyId(), anyBattleArea());
     }
 }

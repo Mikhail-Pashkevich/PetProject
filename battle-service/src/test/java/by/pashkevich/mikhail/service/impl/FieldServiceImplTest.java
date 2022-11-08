@@ -1,12 +1,12 @@
 package by.pashkevich.mikhail.service.impl;
 
+import by.pashkevich.mikhail.exception.IncorrectDataException;
 import by.pashkevich.mikhail.model.entity.Field;
 import by.pashkevich.mikhail.model.entity.enums.BattleStatus;
 import by.pashkevich.mikhail.model.entity.enums.Value;
 import by.pashkevich.mikhail.model.util.Step;
 import by.pashkevich.mikhail.repository.FieldRepository;
 import by.pashkevich.mikhail.repository.FieldSettingRepository;
-import by.pashkevich.mikhail.service.CommonMethods;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -22,6 +22,7 @@ import java.util.stream.Stream;
 
 import static by.pashkevich.mikhail.service.CommonMethods.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ExtendWith(MockitoExtension.class)
 public class FieldServiceImplTest {
@@ -40,35 +41,49 @@ public class FieldServiceImplTest {
 
     private static Stream<Arguments> getFieldVerifyServiceArgumentsAndExpectedBattleStatus() {
         return Stream.of(
-                Arguments.of(true, true, true, BattleStatus.FINISHED),
-                Arguments.of(false, true, CommonMethods.anyBoolean(), BattleStatus.INTERRUPTED),
-                Arguments.of(true, false, CommonMethods.anyBoolean(), BattleStatus.INTERRUPTED),
-                Arguments.of(false, false, CommonMethods.anyBoolean(), BattleStatus.INTERRUPTED),
+                Arguments.of(true, BattleStatus.FINISHED),
+                Arguments.of(false, BattleStatus.IN_PROGRESS)
+        );
+    }
 
-                Arguments.of(true, true, false, BattleStatus.IN_PROGRESS),
-                Arguments.of(false, true, CommonMethods.anyBoolean(), BattleStatus.INTERRUPTED),
-                Arguments.of(true, false, CommonMethods.anyBoolean(), BattleStatus.INTERRUPTED),
-                Arguments.of(false, false, CommonMethods.anyBoolean(), BattleStatus.INTERRUPTED)
+    private static Stream<Arguments> getFieldVerifyServiceArguments() {
+        return Stream.of(
+                Arguments.of(false, true),
+                Arguments.of(true, false),
+                Arguments.of(false, false)
         );
     }
 
     @ParameterizedTest
     @MethodSource("getFieldVerifyServiceArgumentsAndExpectedBattleStatus")
-    public void move(boolean isCorrectBattleArea, boolean isCorrectStep, boolean isWin, BattleStatus expectedStatus) {
-        Value[][] battleArea = CommonMethods.anyBattleArea();
-        Field field = new Field(anyId(), battleArea);
+    public void move_assertReturnBattleStatus(boolean isWin, BattleStatus expectedStatus) {
+        Field field = anyFieldWithBattleArea();
         Step step = anyStep();
         Value value = anyValue();
-        Value expectedValue = BattleStatus.INTERRUPTED.equals(expectedStatus) ? Value.VALUE_EMPTY : value;
 
-        Mockito.when(fieldVerifyService.isCorrectBattleArea(Mockito.any())).thenReturn(isCorrectBattleArea);
-        Mockito.when(fieldVerifyService.isCorrectStep(Mockito.any(), Mockito.any())).thenReturn(isCorrectStep);
+        Mockito.when(fieldVerifyService.isCorrectBattleArea(Mockito.any())).thenReturn(true);
+        Mockito.when(fieldVerifyService.isCorrectStep(Mockito.any(), Mockito.any())).thenReturn(true);
         Mockito.when(fieldVerifyService.isWin(Mockito.any(), Mockito.any())).thenReturn(isWin);
 
         BattleStatus battleStatus = fieldService.move(field, step, value);
 
-        assertEquals(expectedValue, field.getBattleArea()[step.getI()][step.getJ()]);
+        assertEquals(value, field.getBattleArea()[step.getI()][step.getJ()]);
         assertEquals(expectedStatus, battleStatus);
+    }
+
+    @ParameterizedTest
+    @MethodSource("getFieldVerifyServiceArguments")
+    public void move_assertThrowException(boolean isCorrectBattleArea, boolean isCorrectStep) {
+        Field field = anyFieldWithBattleArea();
+        Step step = anyStep();
+        Value value = anyValue();
+
+        Mockito.when(fieldVerifyService.isCorrectBattleArea(Mockito.any())).thenReturn(isCorrectBattleArea);
+        Mockito.when(fieldVerifyService.isCorrectStep(Mockito.any(), Mockito.any())).thenReturn(isCorrectStep);
+
+        assertThrows(IncorrectDataException.class, () -> {
+            fieldService.move(field, step, value);
+        });
     }
 
     @Test
