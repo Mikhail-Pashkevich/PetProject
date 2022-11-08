@@ -21,7 +21,7 @@ public class BattleScheduler {
 
     @Scheduled(fixedRateString = "#{@getFixedRateSetting}")
     private void changeBattleStatus() {
-        Integer moveWaitingTime = settingService.getMoveWaitingTime();
+        Long moveWaitingTime = settingService.getMoveWaitingTime();
         LocalDateTime lastTimeBeforeInterrupt = LocalDateTime.now().minusNanos(moveWaitingTime);
 
         List<Battle> battles = battleRepository.findAll()

@@ -5,5 +5,5 @@ public interface SettingService {
 
     String getFixedRate();
 
-    Integer getMoveWaitingTime();
+    Long getMoveWaitingTime();
 }

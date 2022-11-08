@@ -38,7 +38,7 @@ public class SettingServiceImpl implements SettingService {
     }
 
     @Override
-    public Integer getMoveWaitingTime() {
+    public Long getMoveWaitingTime() {
         String moveWaitingTime = scheduleSettingRepository.findAll()
                 .stream()
                 .findFirst()
@@ -47,6 +47,6 @@ public class SettingServiceImpl implements SettingService {
                 })
                 .getMoveWaitingTime();
 
-        return Duration.parse(moveWaitingTime).getNano();
+        return Duration.parse(moveWaitingTime).toNanos();
     }
 }

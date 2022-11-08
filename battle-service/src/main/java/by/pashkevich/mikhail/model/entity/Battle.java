@@ -1,5 +1,6 @@
 package by.pashkevich.mikhail.model.entity;
 
+import by.pashkevich.mikhail.exception.IncorrectDataException;
 import by.pashkevich.mikhail.model.User;
 import by.pashkevich.mikhail.model.entity.enums.BattleStatus;
 import by.pashkevich.mikhail.model.entity.enums.Value;
@@ -44,7 +45,15 @@ public class Battle {
         switch (value) {
             case VALUE_X -> playerX = player;
             case VALUE_O -> playerO = player;
-            default -> throw new IllegalArgumentException("Can't process value: " + value);
+            default -> throw new IncorrectDataException("Can't process value: " + value);
+        }
+    }
+
+    public void setPlayerOnEmptyPlace(User player) {
+        if (playerO == null) {
+            playerO = player;
+        } else {
+            playerX = player;
         }
     }
 
@@ -54,7 +63,11 @@ public class Battle {
         } else if (playerO.getId().equals(userId)) {
             return Value.VALUE_O;
         } else {
-            throw new IllegalArgumentException("Can't process userId: " + userId);
+            throw new IncorrectDataException("Can't process userId: " + userId);
         }
+    }
+
+    public boolean isExist(User player) {
+        return player.equals(playerX) || player.equals(playerO);
     }
 }

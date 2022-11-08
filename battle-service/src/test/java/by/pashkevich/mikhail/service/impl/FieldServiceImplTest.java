@@ -41,8 +41,10 @@ public class FieldServiceImplTest {
 
     private static Stream<Arguments> getFieldVerifyServiceArgumentsAndExpectedBattleStatus() {
         return Stream.of(
-                Arguments.of(true, BattleStatus.FINISHED),
-                Arguments.of(false, BattleStatus.IN_PROGRESS)
+                Arguments.of(true, Value.VALUE_X, BattleStatus.FINISHED),
+                Arguments.of(true, Value.VALUE_O, BattleStatus.FINISHED),
+                Arguments.of(false, Value.VALUE_X, BattleStatus.WAIT_FOR_MOVE_O),
+                Arguments.of(false, Value.VALUE_O, BattleStatus.WAIT_FOR_MOVE_X)
         );
     }
 
@@ -56,10 +58,9 @@ public class FieldServiceImplTest {
 
     @ParameterizedTest
     @MethodSource("getFieldVerifyServiceArgumentsAndExpectedBattleStatus")
-    public void move_assertReturnBattleStatus(boolean isWin, BattleStatus expectedStatus) {
+    public void move_assertReturnBattleStatus(boolean isWin, Value value, BattleStatus expectedStatus) {
         Field field = anyFieldWithBattleArea();
         Step step = anyStep();
-        Value value = anyValue();
 
         Mockito.when(fieldVerifyService.isCorrectBattleArea(Mockito.any())).thenReturn(true);
         Mockito.when(fieldVerifyService.isCorrectStep(Mockito.any(), Mockito.any())).thenReturn(true);
@@ -81,9 +82,7 @@ public class FieldServiceImplTest {
         Mockito.when(fieldVerifyService.isCorrectBattleArea(Mockito.any())).thenReturn(isCorrectBattleArea);
         Mockito.when(fieldVerifyService.isCorrectStep(Mockito.any(), Mockito.any())).thenReturn(isCorrectStep);
 
-        assertThrows(IncorrectDataException.class, () -> {
-            fieldService.move(field, step, value);
-        });
+        assertThrows(IncorrectDataException.class, () -> fieldService.move(field, step, value));
     }
 
     @Test

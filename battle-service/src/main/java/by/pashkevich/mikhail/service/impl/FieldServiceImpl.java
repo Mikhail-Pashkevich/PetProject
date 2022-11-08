@@ -31,7 +31,15 @@ public class FieldServiceImpl implements FieldService {
 
         field.setValueByStep(value, step);
 
-        return fieldVerifyService.isWin(field, value) ? BattleStatus.FINISHED : BattleStatus.IN_PROGRESS;
+        if (fieldVerifyService.isWin(field, value)) {
+            return BattleStatus.FINISHED;
+        }
+
+        return switch (value) {
+            case VALUE_X -> BattleStatus.WAIT_FOR_MOVE_O;
+            case VALUE_O -> BattleStatus.WAIT_FOR_MOVE_X;
+            default -> throw new IncorrectDataException("Can't process value: " + value);
+        };
     }
 
     @Override
