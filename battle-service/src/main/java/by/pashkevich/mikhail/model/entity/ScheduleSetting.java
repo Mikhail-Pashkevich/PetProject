@@ -24,8 +24,7 @@ public class ScheduleSetting {
     private String fixedRate;
 
     /**
-     * See example values as for {@link org.springframework.scheduling.annotation.Scheduled#fixedRateString
-     * org.springframework.scheduling.annotation.Scheduled}
+     * See example values as for {@link java.time.Duration#parse java.time.Duration}
      */
     @Column
     private String moveWaitingTime;
