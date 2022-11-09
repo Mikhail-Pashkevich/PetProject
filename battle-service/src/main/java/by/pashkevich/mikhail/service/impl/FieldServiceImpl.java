@@ -1,11 +1,14 @@
 package by.pashkevich.mikhail.service.impl;
 
+import by.pashkevich.mikhail.exception.IncorrectDataException;
 import by.pashkevich.mikhail.model.entity.Field;
 import by.pashkevich.mikhail.model.entity.enums.BattleStatus;
 import by.pashkevich.mikhail.model.entity.enums.Value;
+import by.pashkevich.mikhail.model.util.Step;
 import by.pashkevich.mikhail.repository.FieldRepository;
 import by.pashkevich.mikhail.service.FieldService;
 import by.pashkevich.mikhail.service.FieldVerifyService;
+import by.pashkevich.mikhail.service.SettingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -13,27 +16,37 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class FieldServiceImpl implements FieldService {
     private final FieldRepository fieldRepository;
+    private final SettingService settingService;
 
     private final FieldVerifyService fieldVerifyService;
 
 
     @Override
-    public BattleStatus move(Field field, Integer step, Value value) {
-        if (!fieldVerifyService.isCorrect(field) || !isCorrectStep(field, step)) {
-            return BattleStatus.INTERRUPTED;
+    public BattleStatus move(Field field, Step step, Value value) {
+        Value[][] battleArea = field.getBattleArea();
+
+        if (!fieldVerifyService.isCorrectBattleArea(battleArea) || !fieldVerifyService.isCorrectStep(battleArea, step)) {
+            throw new IncorrectDataException("Incorrect battleArea or step");
         }
 
-        field.getField()[step] = value;
+        field.setValueByStep(value, step);
 
-        return fieldVerifyService.isWin(field, value) ? BattleStatus.FINISHED : BattleStatus.IN_PROGRESS;
+        if (fieldVerifyService.isWin(field, value)) {
+            return BattleStatus.FINISHED;
+        }
+
+        return switch (value) {
+            case VALUE_X -> BattleStatus.WAIT_FOR_MOVE_O;
+            case VALUE_O -> BattleStatus.WAIT_FOR_MOVE_X;
+            default -> throw new IncorrectDataException("Can't process value: " + value);
+        };
     }
 
     @Override
-    public Field save(Field field) {
-        return fieldRepository.save(field);
-    }
+    public Field create() {
+        Integer rowSize = settingService.getRowSize();
+        Field field = new Field(rowSize);
 
-    private boolean isCorrectStep(Field field, Integer step) {
-        return 0 <= step && step < field.getField().length && field.isEmpty(step);
+        return fieldRepository.save(field);
     }
 }

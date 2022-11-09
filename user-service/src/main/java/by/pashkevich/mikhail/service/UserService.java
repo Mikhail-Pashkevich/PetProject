@@ -16,8 +16,6 @@ public class UserService {
     }
 
     public User getById(Long id) {
-        return userRepository.findById(id).orElseThrow(() -> {
-            throw new UnsupportedOperationException("Not implemented yet!");
-        });
+        return userRepository.getReferenceById(id);
     }
 }

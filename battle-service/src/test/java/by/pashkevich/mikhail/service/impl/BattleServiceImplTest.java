@@ -1,23 +1,26 @@
 package by.pashkevich.mikhail.service.impl;
 
+import by.pashkevich.mikhail.exception.IncorrectDataException;
 import by.pashkevich.mikhail.model.User;
 import by.pashkevich.mikhail.model.entity.Battle;
 import by.pashkevich.mikhail.model.entity.enums.BattleStatus;
 import by.pashkevich.mikhail.model.entity.enums.Value;
 import by.pashkevich.mikhail.repository.BattleRepository;
+import by.pashkevich.mikhail.service.CommonMethods;
 import by.pashkevich.mikhail.service.FieldService;
 import by.pashkevich.mikhail.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.EnumSource;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Stream;
 
 import static by.pashkevich.mikhail.service.CommonMethods.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -37,12 +40,31 @@ public class BattleServiceImplTest {
     private BattleServiceImpl battleService;
 
 
+    private static Stream<Arguments> getIdAndBattleStatusAndExpectedBattleStatus() {
+        return Stream.of(
+                Arguments.of(1L, BattleStatus.WAIT_FOR_MOVE_X, BattleStatus.WAIT_FOR_MOVE_O),
+                Arguments.of(2L, BattleStatus.WAIT_FOR_MOVE_O, BattleStatus.WAIT_FOR_MOVE_X),
+                Arguments.of(1L, BattleStatus.WAIT_FOR_MOVE_X, BattleStatus.FINISHED),
+                Arguments.of(2L, BattleStatus.WAIT_FOR_MOVE_O, BattleStatus.FINISHED)
+        );
+    }
+
+    public static Stream<Arguments> getIdAndBattleStatus() {
+        return Stream.of(
+                Arguments.of(1L, BattleStatus.WAIT_FOR_MOVE_O),
+                Arguments.of(2L, BattleStatus.WAIT_FOR_MOVE_X),
+                Arguments.of(anyId(), BattleStatus.FINISHED),
+                Arguments.of(anyId(), BattleStatus.INTERRUPTED),
+                Arguments.of(anyId(), BattleStatus.WAIT_FOR_PLAYER)
+        );
+    }
+
     @Test
     void create() {
         User anyUser = anyUser();
 
         Mockito.when(userService.getById(Mockito.any())).thenReturn(anyUser);
-        Mockito.when(fieldService.save(Mockito.any())).thenAnswer(invocation -> invocation.getArgument(0));
+        Mockito.when(fieldService.create()).thenReturn(CommonMethods.anyField());
         Mockito.when(battleRepository.save(Mockito.any())).thenAnswer(invocation -> invocation.getArgument(0));
 
         Battle actualResult = battleService.create(anyId(), Value.VALUE_X);
@@ -72,7 +94,7 @@ public class BattleServiceImplTest {
         assertNotNull(actualResult.getPlayerO());
         assertNotEquals(playerX, actualResult.getPlayerO());
         assertEquals(playerX, actualResult.getPlayerX());
-        assertEquals(BattleStatus.IN_PROGRESS, actualResult.getBattleStatus());
+        assertEquals(BattleStatus.WAIT_FOR_MOVE_X, actualResult.getBattleStatus());
     }
 
     @Test
@@ -94,7 +116,7 @@ public class BattleServiceImplTest {
         assertNotNull(actualResult.getPlayerX());
         assertNotEquals(playerO, actualResult.getPlayerX());
         assertEquals(playerO, actualResult.getPlayerO());
-        assertEquals(BattleStatus.IN_PROGRESS, actualResult.getBattleStatus());
+        assertEquals(BattleStatus.WAIT_FOR_MOVE_X, actualResult.getBattleStatus());
     }
 
     @Test
@@ -107,31 +129,42 @@ public class BattleServiceImplTest {
     }
 
     @ParameterizedTest
-    @EnumSource(value = BattleStatus.class, names = {"FINISHED", "WAIT_FOR_PLAYER"})
-    void makeMove_whenBattleNotProcessed(BattleStatus battleStatus) {
+    @MethodSource("getIdAndBattleStatus")
+    void makeMove_assertThrowIncorrectDataException(Long id, BattleStatus battleStatus) {
         Battle battle = new Battle();
+        User playerX = anyUser();
+        playerX.setId(1L);
+        battle.setPlayerX(playerX);
+        User playerO = anyUser();
+        playerO.setId(2L);
+        battle.setPlayerO(playerO);
 
         battle.setBattleStatus(battleStatus);
 
-        Mockito.when(battleRepository.findById(Mockito.any())).thenReturn(Optional.of(battle));
+        Mockito.when(battleRepository.getReferenceById(Mockito.any())).thenReturn(battle);
 
-        Battle actualResult = battleService.makeMove(anyId(), anyStep(), anyValue());
-
-        assertEquals(battle, actualResult);
+        assertThrows(IncorrectDataException.class, () -> battleService.makeMove(anyId(), anyStep(), id));
     }
 
     @ParameterizedTest
-    @EnumSource(value = BattleStatus.class, names = {"INTERRUPTED", "IN_PROGRESS", "FINISHED"})
-    void makeMove_whenBattleProcessed(BattleStatus battleStatus) {
+    @MethodSource("getIdAndBattleStatusAndExpectedBattleStatus")
+    void makeMove_assertBattleProcessed(Long id, BattleStatus battleStatus, BattleStatus expectedBattleStatus) {
         Battle battle = new Battle();
+        User playerX = anyUser();
+        playerX.setId(1L);
+        battle.setPlayerX(playerX);
+        User playerO = anyUser();
+        playerO.setId(2L);
+        battle.setPlayerO(playerO);
+        battle.setBattleStatus(battleStatus);
 
-        Mockito.when(battleRepository.findById(Mockito.any())).thenReturn(Optional.of(battle));
-        Mockito.when(fieldService.move(Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(battleStatus);
+        Mockito.when(battleRepository.getReferenceById(Mockito.any())).thenReturn(battle);
+        Mockito.when(fieldService.move(Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(expectedBattleStatus);
         Mockito.when(battleRepository.save(Mockito.any())).thenAnswer(invocation -> invocation.getArgument(0));
 
-        Battle actualResult = battleService.makeMove(anyId(), anyStep(), anyValue());
+        Battle actualResult = battleService.makeMove(anyId(), anyStep(), id);
 
-        assertEquals(battleStatus, actualResult.getBattleStatus());
+        assertEquals(expectedBattleStatus, actualResult.getBattleStatus());
         assertNotNull(actualResult.getLastActivityDatetime());
     }
 }

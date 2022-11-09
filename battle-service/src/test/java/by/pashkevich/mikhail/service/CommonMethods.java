@@ -1,15 +1,19 @@
 package by.pashkevich.mikhail.service;
 
 import by.pashkevich.mikhail.model.User;
+import by.pashkevich.mikhail.model.entity.Field;
 import by.pashkevich.mikhail.model.entity.enums.Value;
+import by.pashkevich.mikhail.model.util.Step;
+
+import java.util.Arrays;
 
 public class CommonMethods {
     public static Long anyId() {
         return 0L;
     }
 
-    public static Integer anyStep() {
-        return 1;
+    public static Step anyStep() {
+        return new Step(0, 0);
     }
 
     public static Value anyValue() {
@@ -19,9 +23,28 @@ public class CommonMethods {
     public static User anyUser() {
         User user = new User();
 
+        user.setId(0L);
         user.setLogin("anyLogin");
         user.setPassword("anyPassword");
 
         return user;
+    }
+
+    public static Value[][] anyBattleArea() {
+        Value[][] battleArea = new Value[3][3];
+
+        for (Value[] row : battleArea) {
+            Arrays.fill(row, Value.VALUE_EMPTY);
+        }
+
+        return battleArea;
+    }
+
+    public static Field anyField() {
+        return new Field();
+    }
+
+    public static Field anyFieldWithBattleArea() {
+        return new Field(anyId(), anyBattleArea());
     }
 }

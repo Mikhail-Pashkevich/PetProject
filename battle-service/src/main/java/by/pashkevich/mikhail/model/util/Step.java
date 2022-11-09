@@ -1,4 +1,4 @@
-package by.pashkevich.mikhail.model.dto;
+package by.pashkevich.mikhail.model.util;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,9 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class MoveDto {
-    private Long battleId;
-    private Long userId;
+public class Step {
     private Integer i;
     private Integer j;
 }

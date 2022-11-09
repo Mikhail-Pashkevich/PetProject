@@ -41,12 +41,30 @@ create table battle
 
 create table field
 (
-    id    bigint       not null primary key auto_increment,
-    field varchar(255) not null
+    id          bigint       not null primary key auto_increment,
+    battle_area  varchar(255) not null
 );
 
+create table field_setting
+(
+    id          bigint  not null primary key auto_increment,
+    row_size    int     not null
+);
+
+create table schedule_setting
+(
+    id                  bigint      not null primary key auto_increment,
+    fixed_rate          varchar(50) not null,
+    move_waiting_time   varchar(50) not null
+);
 
 insert into user(login, password, nickname)
 values ('login1', 'password1', 'nickname1'),
        ('login2', 'password2', 'nickname2'),
        ('login3', 'password3', 'nickname3');
+
+insert into field_setting(row_size)
+values (3);
+
+insert into schedule_setting(fixed_rate, move_waiting_time)
+values ('PT2M', 'PT2M');
