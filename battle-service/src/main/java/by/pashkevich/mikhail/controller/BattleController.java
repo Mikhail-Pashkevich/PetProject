@@ -6,6 +6,7 @@ import by.pashkevich.mikhail.model.dto.MoveDto;
 import by.pashkevich.mikhail.model.entity.Battle;
 import by.pashkevich.mikhail.model.util.Step;
 import by.pashkevich.mikhail.service.BattleService;
+import by.pashkevich.mikhail.service.StatisticService;
 import by.pashkevich.mikhail.service.mapper.BattleMapper;
 import by.pashkevich.mikhail.service.mapper.MoveMapper;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +18,7 @@ import java.util.List;
 @RequestMapping("/battle")
 @RequiredArgsConstructor
 public class BattleController {
+    private final StatisticService statisticService;
     private final BattleService battleService;
 
     private final BattleMapper battleMapper;
@@ -43,6 +45,8 @@ public class BattleController {
         Step step = moveMapper.toStep(moveDto);
 
         Battle battle = battleService.makeMove(moveDto.getBattleId(), step, moveDto.getUserId());
+
+        statisticService.save();
 
         return battleMapper.toBattleDto(battle);
     }
