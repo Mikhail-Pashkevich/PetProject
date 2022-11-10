@@ -58,13 +58,20 @@ create table schedule_setting
     move_waiting_time   varchar(50) not null
 );
 
+## only for dev: password is 123456
 insert into user(login, password, nickname)
-values ('login1', 'password1', 'nickname1'),
-       ('login2', 'password2', 'nickname2'),
-       ('login3', 'password3', 'nickname3');
+values ('login1', '$2a$10$ya5CtEj.6MOcs/iXfc.8buQnfOcJVrKr/ReAaNsyZrywJ2h1Gb6KS', 'nickname1'),
+       ('login2', '$2a$10$ya5CtEj.6MOcs/iXfc.8buQnfOcJVrKr/ReAaNsyZrywJ2h1Gb6KS', 'nickname2'),
+       ('login3', '$2a$10$ya5CtEj.6MOcs/iXfc.8buQnfOcJVrKr/ReAaNsyZrywJ2h1Gb6KS', 'nickname3');
+
+insert into role(name)
+values ('USER');
+
+insert into user_roles(user_id, role_id)
+values (1, 1);
 
 insert into field_setting(row_size)
 values (3);
 
 insert into schedule_setting(fixed_rate, move_waiting_time)
-values ('PT2M', 'PT2M');
+values ('PT30M', 'PT1H');

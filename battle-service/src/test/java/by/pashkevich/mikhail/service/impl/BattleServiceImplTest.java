@@ -63,7 +63,7 @@ public class BattleServiceImplTest {
     void create() {
         User anyUser = anyUser();
 
-        Mockito.when(userService.getById(Mockito.any())).thenReturn(anyUser);
+        Mockito.when(userService.getAuthenticatedUser()).thenReturn(anyUser);
         Mockito.when(fieldService.create()).thenReturn(CommonMethods.anyField());
         Mockito.when(battleRepository.save(Mockito.any())).thenAnswer(invocation -> invocation.getArgument(0));
 
@@ -85,7 +85,7 @@ public class BattleServiceImplTest {
         battleWithPlayerO.setPlayerO(playerO);
         List<Battle> battleList = List.of(battleWithPlayerO);
 
-        Mockito.when(userService.getById(Mockito.any())).thenReturn(playerX);
+        Mockito.when(userService.getAuthenticatedUser()).thenReturn(playerX);
         Mockito.when(battleRepository.findAllByBattleStatus(Mockito.any())).thenReturn(battleList);
         Mockito.when(battleRepository.save(Mockito.any())).thenAnswer(invocation -> invocation.getArgument(0));
 
@@ -107,7 +107,7 @@ public class BattleServiceImplTest {
         battleWithPlayerX.setPlayerX(playerX);
         List<Battle> battleList = List.of(battleWithPlayerX);
 
-        Mockito.when(userService.getById(Mockito.any())).thenReturn(playerO);
+        Mockito.when(userService.getAuthenticatedUser()).thenReturn(playerO);
         Mockito.when(battleRepository.findAllByBattleStatus(Mockito.any())).thenReturn(battleList);
         Mockito.when(battleRepository.save(Mockito.any())).thenAnswer(invocation -> invocation.getArgument(0));
 

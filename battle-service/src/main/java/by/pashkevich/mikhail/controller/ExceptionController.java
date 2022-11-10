@@ -1,5 +1,6 @@
 package by.pashkevich.mikhail.controller;
 
+import by.pashkevich.mikhail.exception.DuplicateException;
 import by.pashkevich.mikhail.exception.IncorrectDataException;
 import by.pashkevich.mikhail.exception.NotFoundException;
 import by.pashkevich.mikhail.model.dto.ResponseExceptionDto;
@@ -20,8 +21,8 @@ public class ExceptionController {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
-    @ExceptionHandler(value = IncorrectDataException.class)
-    private ResponseExceptionDto handleIncorrectDataException(IncorrectDataException e) {
+    @ExceptionHandler(value = {IncorrectDataException.class, DuplicateException.class})
+    private ResponseExceptionDto handleException(Exception e) {
         return new ResponseExceptionDto(e.getMessage());
     }
 }
