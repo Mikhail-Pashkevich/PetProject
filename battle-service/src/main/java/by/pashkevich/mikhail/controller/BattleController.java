@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @Secured("ROLE_USER")
@@ -28,7 +29,7 @@ public class BattleController {
 
 
     @PostMapping
-    public BattleDto create(@RequestBody CreateDto createDto) {
+    public BattleDto create(@Valid @RequestBody CreateDto createDto) {
         Battle battle = battleService.create(createDto.getValue());
 
         return battleMapper.toBattleDto(battle);
@@ -43,7 +44,7 @@ public class BattleController {
     }
 
     @PostMapping("/move")
-    public BattleDto makeMove(@RequestBody MoveDto moveDto) {
+    public BattleDto makeMove(@Valid @RequestBody MoveDto moveDto) {
         Step step = moveMapper.toStep(moveDto);
 
         Battle battle = battleService.makeMove(moveDto.getBattleId(), step);
