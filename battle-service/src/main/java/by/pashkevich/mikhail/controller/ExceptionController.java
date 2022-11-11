@@ -1,6 +1,7 @@
 package by.pashkevich.mikhail.controller;
 
 import by.pashkevich.mikhail.exception.DuplicateException;
+import by.pashkevich.mikhail.exception.ForbiddenException;
 import by.pashkevich.mikhail.exception.IncorrectDataException;
 import by.pashkevich.mikhail.exception.NotFoundException;
 import by.pashkevich.mikhail.model.dto.ResponseExceptionDto;
@@ -16,6 +17,13 @@ public class ExceptionController {
     @ResponseBody
     @ExceptionHandler(value = NotFoundException.class)
     private ResponseExceptionDto handleNotFoundException(NotFoundException e) {
+        return new ResponseExceptionDto(e.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ResponseBody
+    @ExceptionHandler(value = ForbiddenException.class)
+    private ResponseExceptionDto handleForbiddenException(ForbiddenException e) {
         return new ResponseExceptionDto(e.getMessage());
     }
 

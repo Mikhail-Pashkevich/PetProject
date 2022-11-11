@@ -7,11 +7,11 @@ import by.pashkevich.mikhail.model.util.Step;
 import java.util.List;
 
 public interface BattleService {
-    Battle create(Long id, Value value);
+    Battle create(Value value);
 
-    Battle join(Long playerId);
+    Battle join();
 
     List<Battle> getOpenedNow();
 
-    Battle makeMove(Long battleId, Step step, Long userId);
+    Battle makeMove(Long battleId, Step step);
 }

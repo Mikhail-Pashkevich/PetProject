@@ -1,5 +1,6 @@
 package by.pashkevich.mikhail.service.impl;
 
+import by.pashkevich.mikhail.exception.ForbiddenException;
 import by.pashkevich.mikhail.exception.IncorrectDataException;
 import by.pashkevich.mikhail.exception.NotFoundException;
 import by.pashkevich.mikhail.model.User;
@@ -30,7 +31,7 @@ public class BattleServiceImpl implements BattleService {
 
 
     @Override
-    public Battle create(Long id, Value value) {
+    public Battle create(Value value) {
         Battle battle = new Battle();
         User player = userService.getAuthenticatedUser();
         Field field = fieldService.create();
@@ -44,7 +45,7 @@ public class BattleServiceImpl implements BattleService {
     }
 
     @Override
-    public Battle join(Long playerId) {
+    public Battle join() {
         User player = userService.getAuthenticatedUser();
 
         Battle joinBattle = battleRepository.findAllByBattleStatus(BattleStatus.WAIT_FOR_PLAYER)
@@ -66,14 +67,18 @@ public class BattleServiceImpl implements BattleService {
     }
 
     @Override
-    public Battle makeMove(Long battleId, Step step, Long userId) {
+    public Battle makeMove(Long battleId, Step step) {
         Battle battle = battleRepository.getReferenceById(battleId);
 
         if (!battle.getBattleStatus().isActiveBattleStatus()) {
             throw new IncorrectDataException("Battle with id = " + battleId + " unavailable");
         }
 
-        Value value = battle.getValueByUserId(userId);
+        User user = userService.getAuthenticatedUser();
+        if (!battle.isExist(user)) {
+            throw new ForbiddenException("User " + user.getLogin() + " can't access to battle with id = " + battle.getId());
+        }
+        Value value = battle.getValueByUserId(user.getId());
 
         if (!isCorrectMoveOrder(value, battle.getBattleStatus())) {
             throw new IncorrectDataException("Incorrect move order");

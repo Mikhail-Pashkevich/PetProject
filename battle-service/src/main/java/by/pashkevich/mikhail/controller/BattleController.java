@@ -27,15 +27,15 @@ public class BattleController {
 
     @PostMapping
     public BattleDto create(@RequestBody CreateDto createDto) {
-        Battle battle = battleService.create(createDto.getUserId(), createDto.getValue());
+        Battle battle = battleService.create(createDto.getValue());
 
         return battleMapper.toBattleDto(battle);
     }
 
-    @PostMapping("/join/{id}")
-    public BattleDto join(@PathVariable Long id) {
+    @PostMapping("/join")
+    public BattleDto join() {
 
-        Battle battle = battleService.join(id);
+        Battle battle = battleService.join();
 
         return battleMapper.toBattleDto(battle);
     }
@@ -44,7 +44,7 @@ public class BattleController {
     public BattleDto makeMove(@RequestBody MoveDto moveDto) {
         Step step = moveMapper.toStep(moveDto);
 
-        Battle battle = battleService.makeMove(moveDto.getBattleId(), step, moveDto.getUserId());
+        Battle battle = battleService.makeMove(moveDto.getBattleId(), step);
 
         statisticService.save();
 

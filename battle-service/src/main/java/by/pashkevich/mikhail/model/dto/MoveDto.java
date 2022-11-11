@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class MoveDto {
     private Long battleId;
-    private Long userId;
     private Integer i;
     private Integer j;
 }

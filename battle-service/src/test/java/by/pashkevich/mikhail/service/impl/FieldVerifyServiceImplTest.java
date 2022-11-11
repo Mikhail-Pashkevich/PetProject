@@ -3,7 +3,6 @@ package by.pashkevich.mikhail.service.impl;
 import by.pashkevich.mikhail.model.entity.Field;
 import by.pashkevich.mikhail.model.entity.enums.Value;
 import by.pashkevich.mikhail.model.util.Step;
-import by.pashkevich.mikhail.service.CommonMethods;
 import by.pashkevich.mikhail.service.SettingService;
 import by.pashkevich.mikhail.service.data.IsCorrectArgumentsProvider;
 import by.pashkevich.mikhail.service.data.IsWinArgumentsProvider;
@@ -20,6 +19,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.stream.Stream;
 
+import static by.pashkevich.mikhail.service.CommonMethods.anyBattleArea;
+import static by.pashkevich.mikhail.service.CommonMethods.anyStep;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(MockitoExtension.class)
@@ -58,7 +59,7 @@ public class FieldVerifyServiceImplTest {
     @ParameterizedTest
     @MethodSource("getStepsAndExpectedResult")
     void isCorrectStep_checkStepPosition(Step step, boolean expectedResult) {
-        Value[][] battleArea = CommonMethods.anyBattleArea();
+        Value[][] battleArea = anyBattleArea();
 
         assertEquals(expectedResult, fieldVerifyService.isCorrectStep(battleArea, step));
     }
@@ -66,8 +67,8 @@ public class FieldVerifyServiceImplTest {
     @ParameterizedTest
     @EnumSource(value = Value.class, names = {"VALUE_X", "VALUE_O", "VALUE_EMPTY"})
     void isCorrectStep_checkIsEmptyCell(Value value) {
-        Value[][] battleArea = CommonMethods.anyBattleArea();
-        Step step = CommonMethods.anyStep();
+        Value[][] battleArea = anyBattleArea();
+        Step step = anyStep();
         boolean expectedResult = Value.VALUE_EMPTY.equals(value);
 
         battleArea[step.getJ()][step.getJ()] = value;

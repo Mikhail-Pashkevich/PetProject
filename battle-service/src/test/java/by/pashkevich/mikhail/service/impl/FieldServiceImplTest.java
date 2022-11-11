@@ -75,14 +75,10 @@ public class FieldServiceImplTest {
     @ParameterizedTest
     @MethodSource("getFieldVerifyServiceArguments")
     public void move_assertThrowException(boolean isCorrectBattleArea, boolean isCorrectStep) {
-        Field field = anyFieldWithBattleArea();
-        Step step = anyStep();
-        Value value = anyValue();
-
         Mockito.when(fieldVerifyService.isCorrectBattleArea(Mockito.any())).thenReturn(isCorrectBattleArea);
         Mockito.when(fieldVerifyService.isCorrectStep(Mockito.any(), Mockito.any())).thenReturn(isCorrectStep);
 
-        assertThrows(IncorrectDataException.class, () -> fieldService.move(field, step, value));
+        assertThrows(IncorrectDataException.class, () -> fieldService.move(anyFieldWithBattleArea(), anyStep(), anyValue()));
     }
 
     @Test
