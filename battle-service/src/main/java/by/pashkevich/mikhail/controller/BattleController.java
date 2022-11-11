@@ -10,10 +10,12 @@ import by.pashkevich.mikhail.service.StatisticService;
 import by.pashkevich.mikhail.service.mapper.BattleMapper;
 import by.pashkevich.mikhail.service.mapper.MoveMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Secured("ROLE_USER")
 @RestController
 @RequestMapping("/battle")
 @RequiredArgsConstructor
