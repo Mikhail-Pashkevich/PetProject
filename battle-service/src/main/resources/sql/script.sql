@@ -61,8 +61,8 @@ create table schedule_setting
 ## only for dev: password is 123456
 insert into user(login, password, nickname)
 values ('login1', '$2a$10$ya5CtEj.6MOcs/iXfc.8buQnfOcJVrKr/ReAaNsyZrywJ2h1Gb6KS', 'nickname1'),
-       ('login2', '$2a$10$ya5CtEj.6MOcs/iXfc.8buQnfOcJVrKr/ReAaNsyZrywJ2h1Gb6KS', 'nickname2'),
-       ('login3', '$2a$10$ya5CtEj.6MOcs/iXfc.8buQnfOcJVrKr/ReAaNsyZrywJ2h1Gb6KS', 'nickname3');
+       ('login2', '$2a$10$Q8debAEzmMbfqDabNa3T..MrI/6Smlkc4fI7mTX2Hk3eMtgC4dcqW', 'nickname2'),
+       ('login3', '$2a$10$MPx5uLyhoH/flIZvfJ0GqO2L7fva7/j7GMu/uWk7UIJTSlQC.ctnS', 'nickname3');
 
 insert into role(name)
 values ('USER');
