@@ -1,13 +1,19 @@
 package by.pashkevich.mikhail.controller;
 
+import by.pashkevich.mikhail.exception.DuplicateException;
+import by.pashkevich.mikhail.exception.ForbiddenException;
 import by.pashkevich.mikhail.exception.IncorrectDataException;
 import by.pashkevich.mikhail.exception.NotFoundException;
 import by.pashkevich.mikhail.model.dto.ResponseExceptionDto;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+
+import java.util.stream.Collectors;
 
 @ControllerAdvice
 public class ExceptionController {
@@ -18,10 +24,29 @@ public class ExceptionController {
         return new ResponseExceptionDto(e.getMessage());
     }
 
+    @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
+    @ResponseBody
+    @ExceptionHandler(value = MethodArgumentNotValidException.class)
+    private ResponseExceptionDto handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
+        String message = e.getBindingResult().getAllErrors()
+                .stream()
+                .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                .collect(Collectors.joining(";\n"));
+
+        return new ResponseExceptionDto(message);
+    }
+
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ResponseBody
+    @ExceptionHandler(value = ForbiddenException.class)
+    private ResponseExceptionDto handleForbiddenException(ForbiddenException e) {
+        return new ResponseExceptionDto(e.getMessage());
+    }
+
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
-    @ExceptionHandler(value = IncorrectDataException.class)
-    private ResponseExceptionDto handleIncorrectDataException(IncorrectDataException e) {
+    @ExceptionHandler(value = {IncorrectDataException.class, DuplicateException.class})
+    private ResponseExceptionDto handleException(Exception e) {
         return new ResponseExceptionDto(e.getMessage());
     }
 }

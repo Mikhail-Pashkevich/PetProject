@@ -1,6 +1,7 @@
 package by.pashkevich.mikhail.service;
 
 import by.pashkevich.mikhail.model.User;
+import by.pashkevich.mikhail.model.entity.Battle;
 import by.pashkevich.mikhail.model.entity.Field;
 import by.pashkevich.mikhail.model.entity.enums.Value;
 import by.pashkevich.mikhail.model.util.Step;
@@ -30,6 +31,16 @@ public class CommonMethods {
         return user;
     }
 
+    public static User anyUser(Long id) {
+        User user = new User();
+
+        user.setId(id);
+        user.setLogin("anyLogin");
+        user.setPassword("anyPassword");
+
+        return user;
+    }
+
     public static Value[][] anyBattleArea() {
         Value[][] battleArea = new Value[3][3];
 
@@ -46,5 +57,16 @@ public class CommonMethods {
 
     public static Field anyFieldWithBattleArea() {
         return new Field(anyId(), anyBattleArea());
+    }
+
+    public static Battle anyBattleWithPlayersWithIds(Long playerXid, Long playerOid) {
+        Battle battle = new Battle();
+
+        User playerX = anyUser(playerXid);
+        battle.setPlayerX(playerX);
+        User playerO = anyUser(playerOid);
+        battle.setPlayerO(playerO);
+
+        return battle;
     }
 }

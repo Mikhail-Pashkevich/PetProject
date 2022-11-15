@@ -6,7 +6,5 @@ import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
 public interface FieldMapper {
-    Field toField(FieldDto fieldDto);
-
     FieldDto toFieldDto(Field field);
 }

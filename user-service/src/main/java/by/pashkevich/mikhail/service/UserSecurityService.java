@@ -2,8 +2,8 @@ package by.pashkevich.mikhail.service;
 
 import by.pashkevich.mikhail.model.User;
 
-public interface UserService {
-    void create(User user);
+public interface UserSecurityService {
+    User encodePassword(User user);
 
     User getAuthenticatedUser();
 }

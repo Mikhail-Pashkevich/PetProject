@@ -1,28 +1,19 @@
 package by.pashkevich.mikhail.model;
 
-import by.pashkevich.mikhail.model.enums.Rolename;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.Set;
 
-@Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Data
 @Entity
 @Table
-public class Role {
+public class Statistic {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column
-    @Enumerated(EnumType.STRING)
-    private Rolename name;
-
-    @Transient
-    @ManyToMany(mappedBy = "roles")
-    private Set<User> users;
 }
+

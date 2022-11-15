@@ -20,9 +20,7 @@ public class SettingServiceImpl implements SettingService {
         return fieldSettingRepository.findAll()
                 .stream()
                 .findFirst()
-                .orElseThrow(() -> {
-                    throw new NotFoundException("Can't find any 'row size' config");
-                })
+                .orElseThrow(() -> new NotFoundException("Can't find any 'row size' config"))
                 .getRowSize();
     }
 
@@ -31,9 +29,7 @@ public class SettingServiceImpl implements SettingService {
         return scheduleSettingRepository.findAll()
                 .stream()
                 .findFirst()
-                .orElseThrow(() -> {
-                    throw new NotFoundException("Can't find any 'fixed rate' config");
-                })
+                .orElseThrow(() -> new NotFoundException("Can't find any 'fixed rate' config"))
                 .getFixedRate();
     }
 
@@ -42,9 +38,7 @@ public class SettingServiceImpl implements SettingService {
         String moveWaitingTime = scheduleSettingRepository.findAll()
                 .stream()
                 .findFirst()
-                .orElseThrow(() -> {
-                    throw new NotFoundException("Can't find any 'move waiting time' config");
-                })
+                .orElseThrow(() -> new NotFoundException("Can't find any 'move waiting time' config"))
                 .getMoveWaitingTime();
 
         return Duration.parse(moveWaitingTime).toNanos();

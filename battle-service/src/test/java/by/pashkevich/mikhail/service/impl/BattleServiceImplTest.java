@@ -1,12 +1,12 @@
 package by.pashkevich.mikhail.service.impl;
 
+import by.pashkevich.mikhail.exception.ForbiddenException;
 import by.pashkevich.mikhail.exception.IncorrectDataException;
 import by.pashkevich.mikhail.model.User;
 import by.pashkevich.mikhail.model.entity.Battle;
 import by.pashkevich.mikhail.model.entity.enums.BattleStatus;
 import by.pashkevich.mikhail.model.entity.enums.Value;
 import by.pashkevich.mikhail.repository.BattleRepository;
-import by.pashkevich.mikhail.service.CommonMethods;
 import by.pashkevich.mikhail.service.FieldService;
 import by.pashkevich.mikhail.service.UserService;
 import org.junit.jupiter.api.Test;
@@ -30,7 +30,7 @@ public class BattleServiceImplTest {
     @Mock
     private BattleRepository battleRepository;
 
-    @Mock
+    @Mock(lenient = true)
     private UserService userService;
 
     @Mock
@@ -40,22 +40,29 @@ public class BattleServiceImplTest {
     private BattleServiceImpl battleService;
 
 
-    private static Stream<Arguments> getIdAndBattleStatusAndExpectedBattleStatus() {
+    private static Stream<Arguments> getArgumentsForProcessing() {
         return Stream.of(
-                Arguments.of(1L, BattleStatus.WAIT_FOR_MOVE_X, BattleStatus.WAIT_FOR_MOVE_O),
-                Arguments.of(2L, BattleStatus.WAIT_FOR_MOVE_O, BattleStatus.WAIT_FOR_MOVE_X),
-                Arguments.of(1L, BattleStatus.WAIT_FOR_MOVE_X, BattleStatus.FINISHED),
-                Arguments.of(2L, BattleStatus.WAIT_FOR_MOVE_O, BattleStatus.FINISHED)
+                Arguments.of(anyUser(1L), BattleStatus.WAIT_FOR_MOVE_X, BattleStatus.WAIT_FOR_MOVE_O),
+                Arguments.of(anyUser(2L), BattleStatus.WAIT_FOR_MOVE_O, BattleStatus.WAIT_FOR_MOVE_X),
+                Arguments.of(anyUser(1L), BattleStatus.WAIT_FOR_MOVE_X, BattleStatus.FINISHED),
+                Arguments.of(anyUser(2L), BattleStatus.WAIT_FOR_MOVE_O, BattleStatus.FINISHED)
         );
     }
 
-    public static Stream<Arguments> getIdAndBattleStatus() {
+    public static Stream<Arguments> getArgumentsForThrowForbiddenException() {
         return Stream.of(
-                Arguments.of(1L, BattleStatus.WAIT_FOR_MOVE_O),
-                Arguments.of(2L, BattleStatus.WAIT_FOR_MOVE_X),
-                Arguments.of(anyId(), BattleStatus.FINISHED),
-                Arguments.of(anyId(), BattleStatus.INTERRUPTED),
-                Arguments.of(anyId(), BattleStatus.WAIT_FOR_PLAYER)
+                Arguments.of(anyUser(3L), BattleStatus.WAIT_FOR_MOVE_O),
+                Arguments.of(anyUser(3L), BattleStatus.WAIT_FOR_MOVE_X)
+        );
+    }
+
+    public static Stream<Arguments> getArgumentsForThrowIncorrectDataException() {
+        return Stream.of(
+                Arguments.of(anyUser(1L), BattleStatus.WAIT_FOR_MOVE_O),
+                Arguments.of(anyUser(2L), BattleStatus.WAIT_FOR_MOVE_X),
+                Arguments.of(anyUser(), BattleStatus.FINISHED),
+                Arguments.of(anyUser(), BattleStatus.INTERRUPTED),
+                Arguments.of(anyUser(), BattleStatus.WAIT_FOR_PLAYER)
         );
     }
 
@@ -63,11 +70,11 @@ public class BattleServiceImplTest {
     void create() {
         User anyUser = anyUser();
 
-        Mockito.when(userService.getById(Mockito.any())).thenReturn(anyUser);
-        Mockito.when(fieldService.create()).thenReturn(CommonMethods.anyField());
+        Mockito.when(userService.getAuthenticatedUser()).thenReturn(anyUser);
+        Mockito.when(fieldService.create()).thenReturn(anyField());
         Mockito.when(battleRepository.save(Mockito.any())).thenAnswer(invocation -> invocation.getArgument(0));
 
-        Battle actualResult = battleService.create(anyId(), Value.VALUE_X);
+        Battle actualResult = battleService.create(Value.VALUE_X);
 
         assertEquals(anyUser, actualResult.getPlayerX());
         assertNull(actualResult.getPlayerO());
@@ -77,19 +84,17 @@ public class BattleServiceImplTest {
 
     @Test
     void join_whenUserJoinAsPlayerX() {
-        User playerX = anyUser();
-        playerX.setLogin("playerX");
+        User playerX = anyUser(1L);
         Battle battleWithPlayerO = new Battle();
-        User playerO = anyUser();
-        playerO.setLogin("playerO");
+        User playerO = anyUser(2L);
         battleWithPlayerO.setPlayerO(playerO);
         List<Battle> battleList = List.of(battleWithPlayerO);
 
-        Mockito.when(userService.getById(Mockito.any())).thenReturn(playerX);
+        Mockito.when(userService.getAuthenticatedUser()).thenReturn(playerX);
         Mockito.when(battleRepository.findAllByBattleStatus(Mockito.any())).thenReturn(battleList);
         Mockito.when(battleRepository.save(Mockito.any())).thenAnswer(invocation -> invocation.getArgument(0));
 
-        Battle actualResult = battleService.join(anyId());
+        Battle actualResult = battleService.join();
 
         assertNotNull(actualResult.getPlayerO());
         assertNotEquals(playerX, actualResult.getPlayerO());
@@ -99,19 +104,17 @@ public class BattleServiceImplTest {
 
     @Test
     void join_whenUserJoinAsPlayerO() {
-        User playerO = anyUser();
-        playerO.setLogin("playerO");
+        User playerO = anyUser(2L);
         Battle battleWithPlayerX = new Battle();
-        User playerX = anyUser();
-        playerX.setLogin("playerX");
+        User playerX = anyUser(1L);
         battleWithPlayerX.setPlayerX(playerX);
         List<Battle> battleList = List.of(battleWithPlayerX);
 
-        Mockito.when(userService.getById(Mockito.any())).thenReturn(playerO);
+        Mockito.when(userService.getAuthenticatedUser()).thenReturn(playerO);
         Mockito.when(battleRepository.findAllByBattleStatus(Mockito.any())).thenReturn(battleList);
         Mockito.when(battleRepository.save(Mockito.any())).thenAnswer(invocation -> invocation.getArgument(0));
 
-        Battle actualResult = battleService.join(anyId());
+        Battle actualResult = battleService.join();
 
         assertNotNull(actualResult.getPlayerX());
         assertNotEquals(playerO, actualResult.getPlayerX());
@@ -129,40 +132,43 @@ public class BattleServiceImplTest {
     }
 
     @ParameterizedTest
-    @MethodSource("getIdAndBattleStatus")
-    void makeMove_assertThrowIncorrectDataException(Long id, BattleStatus battleStatus) {
-        Battle battle = new Battle();
-        User playerX = anyUser();
-        playerX.setId(1L);
-        battle.setPlayerX(playerX);
-        User playerO = anyUser();
-        playerO.setId(2L);
-        battle.setPlayerO(playerO);
+    @MethodSource("getArgumentsForThrowIncorrectDataException")
+    void makeMove_assertThrowIncorrectDataException(User player, BattleStatus battleStatus) {
+        Battle battle = anyBattleWithPlayersWithIds(1L, 2L);
 
         battle.setBattleStatus(battleStatus);
 
         Mockito.when(battleRepository.getReferenceById(Mockito.any())).thenReturn(battle);
+        Mockito.when(userService.getAuthenticatedUser()).thenReturn(player);
 
-        assertThrows(IncorrectDataException.class, () -> battleService.makeMove(anyId(), anyStep(), id));
+        assertThrows(IncorrectDataException.class, () -> battleService.makeMove(anyId(), anyStep()));
     }
 
     @ParameterizedTest
-    @MethodSource("getIdAndBattleStatusAndExpectedBattleStatus")
-    void makeMove_assertBattleProcessed(Long id, BattleStatus battleStatus, BattleStatus expectedBattleStatus) {
-        Battle battle = new Battle();
-        User playerX = anyUser();
-        playerX.setId(1L);
-        battle.setPlayerX(playerX);
-        User playerO = anyUser();
-        playerO.setId(2L);
-        battle.setPlayerO(playerO);
+    @MethodSource("getArgumentsForThrowForbiddenException")
+    void makeMove_assertThrowForbiddenException(User player, BattleStatus battleStatus) {
+        Battle battle = anyBattleWithPlayersWithIds(1L, 2L);
+
         battle.setBattleStatus(battleStatus);
 
         Mockito.when(battleRepository.getReferenceById(Mockito.any())).thenReturn(battle);
+        Mockito.when(userService.getAuthenticatedUser()).thenReturn(player);
+
+        assertThrows(ForbiddenException.class, () -> battleService.makeMove(anyId(), anyStep()));
+    }
+
+    @ParameterizedTest
+    @MethodSource("getArgumentsForProcessing")
+    void makeMove_assertBattleProcessed(User player, BattleStatus battleStatus, BattleStatus expectedBattleStatus) {
+        Battle battle = anyBattleWithPlayersWithIds(1L, 2L);
+        battle.setBattleStatus(battleStatus);
+
+        Mockito.when(battleRepository.getReferenceById(Mockito.any())).thenReturn(battle);
+        Mockito.when(userService.getAuthenticatedUser()).thenReturn(player);
         Mockito.when(fieldService.move(Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(expectedBattleStatus);
         Mockito.when(battleRepository.save(Mockito.any())).thenAnswer(invocation -> invocation.getArgument(0));
 
-        Battle actualResult = battleService.makeMove(anyId(), anyStep(), id);
+        Battle actualResult = battleService.makeMove(anyId(), anyStep());
 
         assertEquals(expectedBattleStatus, actualResult.getBattleStatus());
         assertNotNull(actualResult.getLastActivityDatetime());
