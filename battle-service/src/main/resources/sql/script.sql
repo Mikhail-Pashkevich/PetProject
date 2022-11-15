@@ -68,7 +68,8 @@ insert into role(name)
 values ('USER');
 
 insert into user_roles(user_id, role_id)
-values (1, 1);
+values (1, 1),
+(2, 1);
 
 insert into field_setting(row_size)
 values (3);
