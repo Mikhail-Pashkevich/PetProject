@@ -1,4 +1,4 @@
-package by.pashkevich.mikhail.service.mapper;
+package by.pashkevich.mikhail.mapper;
 
 import by.pashkevich.mikhail.model.User;
 import by.pashkevich.mikhail.model.dto.PlayerDto;

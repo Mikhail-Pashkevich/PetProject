@@ -1,6 +1,8 @@
 package by.pashkevich.mikhail.controller;
 
 import by.pashkevich.mikhail.aspect.AuthUserProvide;
+import by.pashkevich.mikhail.mapper.BattleMapper;
+import by.pashkevich.mikhail.mapper.MoveMapper;
 import by.pashkevich.mikhail.model.User;
 import by.pashkevich.mikhail.model.dto.BattleDto;
 import by.pashkevich.mikhail.model.dto.CreateDto;
@@ -9,8 +11,6 @@ import by.pashkevich.mikhail.model.entity.Battle;
 import by.pashkevich.mikhail.model.util.Step;
 import by.pashkevich.mikhail.service.BattleService;
 import by.pashkevich.mikhail.service.StatisticService;
-import by.pashkevich.mikhail.service.mapper.BattleMapper;
-import by.pashkevich.mikhail.service.mapper.MoveMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
