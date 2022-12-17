@@ -24,11 +24,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public void create(User user) {
         if (userRepository.existsByLogin(user.getLogin())) {
-            throw new DuplicateException("User with login = " + user.getLogin() + " already exist");
+            throw new DuplicateException("User with login = %s already exist", user.getLogin());
         }
 
         Role role = roleRepository.findByName(Rolename.USER).orElseThrow(() ->
-                new NotFoundException("Can't find role with name = " + Rolename.USER)
+                new NotFoundException("Can't find role with name = ", Rolename.USER.name())
         );
         user.addRole(role);
 

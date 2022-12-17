@@ -1,6 +1,7 @@
 package by.pashkevich.mikhail.service.impl;
 
-import by.pashkevich.mikhail.exception.ForbiddenException;
+import by.pashkevich.mikhail.exception.AccessException;
+import by.pashkevich.mikhail.exception.BattleUnavailableException;
 import by.pashkevich.mikhail.exception.IncorrectDataException;
 import by.pashkevich.mikhail.exception.NotFoundException;
 import by.pashkevich.mikhail.model.User;
@@ -52,7 +53,7 @@ public class BattleServiceImpl implements BattleService {
                 .stream()
                 .filter(dbBattle -> isExist(dbBattle, player))
                 .min(Comparator.comparing(Battle::getLastActivityDatetime))
-                .orElseThrow(() -> new NotFoundException("There are any battles without user with id = " + player.getId()));
+                .orElseThrow(() -> new NotFoundException("There are no battles without user with id = %d", player.getId()));
 
         setPlayerOnEmptyPlace(battle, player);
         battle.setBattleStatus(BattleStatus.WAIT_FOR_MOVE_X);
@@ -71,12 +72,14 @@ public class BattleServiceImpl implements BattleService {
         Battle battle = battleRepository.getReferenceById(battleId);
 
         if (!battle.getBattleStatus().isActiveBattleStatus()) {
-            throw new IncorrectDataException("Battle with id = " + battleId + " unavailable");
+            throw new BattleUnavailableException(battleId);
         }
 
         User user = userService.getAuthenticatedUser();
         if (isExist(battle, user)) {
-            throw new ForbiddenException("User " + user.getLogin() + " can't access to battle with id = " + battle.getId());
+            throw new AccessException("User %s can't access to battle with id = %d",
+                    user.getLogin(),
+                    battle.getId());
         }
         Value value = getValueByUserId(battle, user.getId());
 
@@ -101,7 +104,7 @@ public class BattleServiceImpl implements BattleService {
         switch (value) {
             case VALUE_X -> battle.setPlayerX(player);
             case VALUE_O -> battle.setPlayerO(player);
-            default -> throw new IncorrectDataException("Can't process value: " + value);
+            default -> throw new IncorrectDataException("Can't process value: %s", value.name());
         }
     }
 
@@ -119,7 +122,7 @@ public class BattleServiceImpl implements BattleService {
         } else if (battle.getPlayerO().getId().equals(userId)) {
             return Value.VALUE_O;
         } else {
-            throw new IncorrectDataException("Can't process userId: " + userId);
+            throw new IncorrectDataException("Can't process userId: %d", userId);
         }
     }
 
