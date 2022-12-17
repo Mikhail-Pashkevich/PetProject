@@ -13,7 +13,6 @@ import by.pashkevich.mikhail.model.util.Step;
 import by.pashkevich.mikhail.repository.BattleRepository;
 import by.pashkevich.mikhail.service.BattleService;
 import by.pashkevich.mikhail.service.FieldService;
-import by.pashkevich.mikhail.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -28,16 +27,14 @@ public class BattleServiceImpl implements BattleService {
     private final BattleRepository battleRepository;
 
     private final FieldService fieldService;
-    private final UserService userService;
 
 
     @Override
-    public Battle create(Value value) {
+    public Battle create(Value value, User user) {
         Battle battle = new Battle();
-        User player = userService.getAuthenticatedUser();
         Field field = fieldService.create();
 
-        setPlayerByValue(battle, player, value);
+        setPlayerByValue(battle, user, value);
         battle.setField(field);
         battle.setBattleStatus(BattleStatus.WAIT_FOR_PLAYER);
         battle.setLastActivityDatetime(LocalDateTime.now());
@@ -46,14 +43,12 @@ public class BattleServiceImpl implements BattleService {
     }
 
     @Override
-    public Battle join() {
-        User player = userService.getAuthenticatedUser();
-
+    public Battle join(User player) {
         Battle battle = battleRepository.findAllByBattleStatus(BattleStatus.WAIT_FOR_PLAYER)
                 .stream()
-                .filter(dbBattle -> isExist(dbBattle, player))
+                .filter(dbBattle -> !isExist(dbBattle, player))
                 .min(Comparator.comparing(Battle::getLastActivityDatetime))
-                .orElseThrow(() -> new NotFoundException("There are no battles without user with id = %d", player.getId()));
+                .orElseThrow(() -> new NotFoundException("There are no battles without player with id = %d", player.getId()));
 
         setPlayerOnEmptyPlace(battle, player);
         battle.setBattleStatus(BattleStatus.WAIT_FOR_MOVE_X);
@@ -68,20 +63,19 @@ public class BattleServiceImpl implements BattleService {
     }
 
     @Override
-    public Battle makeMove(Long battleId, Step step) {
+    public Battle makeMove(Long battleId, Step step, User player) {
         Battle battle = battleRepository.getReferenceById(battleId);
 
         if (!battle.getBattleStatus().isActiveBattleStatus()) {
             throw new BattleUnavailableException(battleId);
         }
 
-        User user = userService.getAuthenticatedUser();
-        if (isExist(battle, user)) {
+        if (!isExist(battle, player)) {
             throw new AccessException("User %s can't access to battle with id = %d",
-                    user.getLogin(),
+                    player.getLogin(),
                     battle.getId());
         }
-        Value value = getValueByUserId(battle, user.getId());
+        Value value = getValueByUserId(battle, player.getId());
 
         if (!isCorrectMoveOrder(value, battle.getBattleStatus())) {
             throw new IncorrectDataException("Incorrect move order");

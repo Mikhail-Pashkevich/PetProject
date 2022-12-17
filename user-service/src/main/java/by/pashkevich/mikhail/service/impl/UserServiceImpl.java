@@ -36,8 +36,4 @@ public class UserServiceImpl implements UserService {
 
         userRepository.save(user);
     }
-
-    public User getAuthenticatedUser() {
-        return userSecurityService.getAuthenticatedUser();
-    }
 }

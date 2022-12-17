@@ -1,5 +1,7 @@
 package by.pashkevich.mikhail.controller;
 
+import by.pashkevich.mikhail.aspect.AuthUserProvide;
+import by.pashkevich.mikhail.model.User;
 import by.pashkevich.mikhail.model.dto.BattleDto;
 import by.pashkevich.mikhail.model.dto.CreateDto;
 import by.pashkevich.mikhail.model.dto.MoveDto;
@@ -29,25 +31,28 @@ public class BattleController {
 
 
     @PostMapping
-    public BattleDto create(@Valid @RequestBody CreateDto createDto) {
-        Battle battle = battleService.create(createDto.getValue());
+    @AuthUserProvide
+    public BattleDto create(@Valid @RequestBody CreateDto createDto, User user) {
+        Battle battle = battleService.create(createDto.getValue(), user);
 
         return battleMapper.toBattleDto(battle);
     }
 
     @PostMapping("/join")
-    public BattleDto join() {
+    @AuthUserProvide
+    public BattleDto join(User user) {
 
-        Battle battle = battleService.join();
+        Battle battle = battleService.join(user);
 
         return battleMapper.toBattleDto(battle);
     }
 
     @PostMapping("/move")
-    public BattleDto makeMove(@Valid @RequestBody MoveDto moveDto) {
+    @AuthUserProvide
+    public BattleDto makeMove(@Valid @RequestBody MoveDto moveDto, User user) {
         Step step = moveMapper.toStep(moveDto);
 
-        Battle battle = battleService.makeMove(moveDto.getBattleId(), step);
+        Battle battle = battleService.makeMove(moveDto.getBattleId(), step, user);
 
         statisticService.save();
 
