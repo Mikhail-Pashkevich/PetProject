@@ -36,7 +36,7 @@ public class BattleServiceImpl implements BattleService {
         User player = userService.getAuthenticatedUser();
         Field field = fieldService.create();
 
-        battle.setPlayerByValue(player, value);
+        setPlayerByValue(battle, player, value);
         battle.setField(field);
         battle.setBattleStatus(BattleStatus.WAIT_FOR_PLAYER);
         battle.setLastActivityDatetime(LocalDateTime.now());
@@ -48,17 +48,17 @@ public class BattleServiceImpl implements BattleService {
     public Battle join() {
         User player = userService.getAuthenticatedUser();
 
-        Battle joinBattle = battleRepository.findAllByBattleStatus(BattleStatus.WAIT_FOR_PLAYER)
+        Battle battle = battleRepository.findAllByBattleStatus(BattleStatus.WAIT_FOR_PLAYER)
                 .stream()
-                .filter(battle -> !battle.isExist(player))
+                .filter(dbBattle -> isExist(dbBattle, player))
                 .min(Comparator.comparing(Battle::getLastActivityDatetime))
                 .orElseThrow(() -> new NotFoundException("There are any battles without user with id = " + player.getId()));
 
-        joinBattle.setPlayerOnEmptyPlace(player);
-        joinBattle.setBattleStatus(BattleStatus.WAIT_FOR_MOVE_X);
-        joinBattle.setLastActivityDatetime(LocalDateTime.now());
+        setPlayerOnEmptyPlace(battle, player);
+        battle.setBattleStatus(BattleStatus.WAIT_FOR_MOVE_X);
+        battle.setLastActivityDatetime(LocalDateTime.now());
 
-        return battleRepository.save(joinBattle);
+        return battleRepository.save(battle);
     }
 
     @Override
@@ -75,10 +75,10 @@ public class BattleServiceImpl implements BattleService {
         }
 
         User user = userService.getAuthenticatedUser();
-        if (!battle.isExist(user)) {
+        if (isExist(battle, user)) {
             throw new ForbiddenException("User " + user.getLogin() + " can't access to battle with id = " + battle.getId());
         }
-        Value value = battle.getValueByUserId(user.getId());
+        Value value = getValueByUserId(battle, user.getId());
 
         if (!isCorrectMoveOrder(value, battle.getBattleStatus())) {
             throw new IncorrectDataException("Incorrect move order");
@@ -95,5 +95,35 @@ public class BattleServiceImpl implements BattleService {
     private boolean isCorrectMoveOrder(Value value, BattleStatus battleStatus) {
         return (value.equals(Value.VALUE_X) && battleStatus.equals(BattleStatus.WAIT_FOR_MOVE_X))
                 || (value.equals(Value.VALUE_O) && battleStatus.equals(BattleStatus.WAIT_FOR_MOVE_O));
+    }
+
+    private void setPlayerByValue(Battle battle, User player, Value value) {
+        switch (value) {
+            case VALUE_X -> battle.setPlayerX(player);
+            case VALUE_O -> battle.setPlayerO(player);
+            default -> throw new IncorrectDataException("Can't process value: " + value);
+        }
+    }
+
+    private void setPlayerOnEmptyPlace(Battle battle, User player) {
+        if (battle.getPlayerO() == null) {
+            battle.setPlayerO(player);
+        } else {
+            battle.setPlayerX(player);
+        }
+    }
+
+    private Value getValueByUserId(Battle battle, Long userId) {
+        if (battle.getPlayerX().getId().equals(userId)) {
+            return Value.VALUE_X;
+        } else if (battle.getPlayerO().getId().equals(userId)) {
+            return Value.VALUE_O;
+        } else {
+            throw new IncorrectDataException("Can't process userId: " + userId);
+        }
+    }
+
+    private boolean isExist(Battle battle, User player) {
+        return player.equals(battle.getPlayerX()) || player.equals(battle.getPlayerO());
     }
 }
