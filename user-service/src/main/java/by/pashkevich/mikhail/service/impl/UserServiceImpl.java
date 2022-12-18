@@ -12,6 +12,8 @@ import by.pashkevich.mikhail.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
+
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
@@ -30,7 +32,11 @@ public class UserServiceImpl implements UserService {
         Role role = roleRepository.findByName(Rolename.USER).orElseThrow(() ->
                 new NotFoundException("Can't find role with name = ", Rolename.USER.name())
         );
-        user.addRole(role);
+
+        if (user.getRoles() == null) {
+            user.setRoles(new HashSet<>());
+        }
+        user.getRoles().add(role);
 
         user = userSecurityService.encodePassword(user);
 
