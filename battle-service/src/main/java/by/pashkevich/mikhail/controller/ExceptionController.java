@@ -1,9 +1,6 @@
 package by.pashkevich.mikhail.controller;
 
-import by.pashkevich.mikhail.exception.DuplicateException;
-import by.pashkevich.mikhail.exception.ForbiddenException;
-import by.pashkevich.mikhail.exception.IncorrectDataException;
-import by.pashkevich.mikhail.exception.NotFoundException;
+import by.pashkevich.mikhail.exception.*;
 import by.pashkevich.mikhail.model.dto.ResponseExceptionDto;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
@@ -38,14 +35,14 @@ public class ExceptionController {
 
     @ResponseStatus(HttpStatus.FORBIDDEN)
     @ResponseBody
-    @ExceptionHandler(value = ForbiddenException.class)
-    private ResponseExceptionDto handleForbiddenException(ForbiddenException e) {
+    @ExceptionHandler(value = {AccessException.class, ForbiddenException.class})
+    private ResponseExceptionDto handleForbiddenException(Exception e) {
         return new ResponseExceptionDto(e.getMessage());
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
-    @ExceptionHandler(value = {IncorrectDataException.class, DuplicateException.class})
+    @ExceptionHandler(value = {IncorrectDataException.class, DuplicateException.class, BattleUnavailableException.class})
     private ResponseExceptionDto handleException(Exception e) {
         return new ResponseExceptionDto(e.getMessage());
     }

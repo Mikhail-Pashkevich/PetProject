@@ -38,7 +38,7 @@ public class FieldServiceImpl implements FieldService {
         return switch (value) {
             case VALUE_X -> BattleStatus.WAIT_FOR_MOVE_O;
             case VALUE_O -> BattleStatus.WAIT_FOR_MOVE_X;
-            default -> throw new IncorrectDataException("Can't process value: " + value);
+            default -> throw new IncorrectDataException("Can't process value: %s", value.name());
         };
     }
 

@@ -33,7 +33,7 @@ public class UserSecurityServiceImpl implements UserSecurityService {
                 .getName();
 
         return userRepository.findByLogin(login).orElseThrow(() ->
-                new NotFoundException("Can't find user by current email: " + login)
+                new NotFoundException("Can't find user by current login: %s", login)
         );
     }
 }

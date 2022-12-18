@@ -16,7 +16,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws NotFoundException {
         User user = userRepository.findByLoginWithRoles(username).orElseThrow(() ->
-                new NotFoundException("Can't find user by current login: " + username)
+                new NotFoundException("Can't find user by current login: %s", username)
         );
 
         return org.springframework.security.core.userdetails.User

@@ -10,9 +10,9 @@ public enum BattleStatus {
     INTERRUPTED;
 
 
-    private static final List<BattleStatus> ACTIVE_BATTLE = List.of(WAIT_FOR_MOVE_X, WAIT_FOR_MOVE_O);
+    private static final List<BattleStatus> ACTIVE_BATTLES = List.of(WAIT_FOR_MOVE_X, WAIT_FOR_MOVE_O);
 
     public boolean isActiveBattleStatus() {
-        return ACTIVE_BATTLE.contains(this);
+        return ACTIVE_BATTLES.contains(this);
     }
 }
