@@ -1,13 +1,11 @@
 package by.pashkevich.mikhail.service.impl;
 
-import by.pashkevich.mikhail.exception.AccessException;
-import by.pashkevich.mikhail.exception.BattleUnavailableException;
-import by.pashkevich.mikhail.exception.IncorrectDataException;
 import by.pashkevich.mikhail.model.User;
 import by.pashkevich.mikhail.model.entity.Battle;
 import by.pashkevich.mikhail.model.entity.enums.BattleStatus;
 import by.pashkevich.mikhail.model.entity.enums.Value;
 import by.pashkevich.mikhail.repository.BattleRepository;
+import by.pashkevich.mikhail.service.BattleVerifyService;
 import by.pashkevich.mikhail.service.FieldService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,7 +14,6 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
@@ -24,11 +21,17 @@ import java.util.stream.Stream;
 
 import static by.pashkevich.mikhail.service.CommonMethods.*;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class BattleServiceImplTest {
     @Mock
     private BattleRepository battleRepository;
+
+    @Mock
+    private BattleVerifyService battleVerifyService;
 
     @Mock
     private FieldService fieldService;
@@ -46,24 +49,12 @@ public class BattleServiceImplTest {
         );
     }
 
-    public static Stream<Arguments> getArgumentsForThrowException() {
-        return Stream.of(
-                Arguments.of(BattleStatus.FINISHED, BattleUnavailableException.class, anyUser()),
-                Arguments.of(BattleStatus.INTERRUPTED, BattleUnavailableException.class, anyUser()),
-                Arguments.of(BattleStatus.WAIT_FOR_PLAYER, BattleUnavailableException.class, anyUser()),
-                Arguments.of(BattleStatus.WAIT_FOR_MOVE_O, AccessException.class, anyUser(3L)),
-                Arguments.of(BattleStatus.WAIT_FOR_MOVE_X, AccessException.class, anyUser(3L)),
-                Arguments.of(BattleStatus.WAIT_FOR_MOVE_O, IncorrectDataException.class, anyUser(1L)),
-                Arguments.of(BattleStatus.WAIT_FOR_MOVE_X, IncorrectDataException.class, anyUser(2L))
-        );
-    }
-
     @Test
     void create() {
         User anyUser = anyUser();
 
-        Mockito.when(fieldService.create()).thenReturn(anyField());
-        Mockito.when(battleRepository.save(Mockito.any())).thenAnswer(invocation -> invocation.getArgument(0));
+        when(fieldService.create()).thenReturn(anyField());
+        when(battleRepository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
 
         Battle actualResult = battleService.create(Value.VALUE_X, anyUser);
 
@@ -81,8 +72,8 @@ public class BattleServiceImplTest {
         battleWithPlayerO.setPlayerO(playerO);
         List<Battle> battleList = List.of(battleWithPlayerO);
 
-        Mockito.when(battleRepository.findAllByBattleStatus(Mockito.any())).thenReturn(battleList);
-        Mockito.when(battleRepository.save(Mockito.any())).thenAnswer(invocation -> invocation.getArgument(0));
+        when(battleRepository.findAllByBattleStatusAndWithoutUser(any(), anyLong())).thenReturn(battleList);
+        when(battleRepository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
 
         Battle actualResult = battleService.join(playerX);
 
@@ -100,8 +91,8 @@ public class BattleServiceImplTest {
         battleWithPlayerX.setPlayerX(playerX);
         List<Battle> battleList = List.of(battleWithPlayerX);
 
-        Mockito.when(battleRepository.findAllByBattleStatus(Mockito.any())).thenReturn(battleList);
-        Mockito.when(battleRepository.save(Mockito.any())).thenAnswer(invocation -> invocation.getArgument(0));
+        when(battleRepository.findAllByBattleStatusAndWithoutUser(any(), anyLong())).thenReturn(battleList);
+        when(battleRepository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
 
         Battle actualResult = battleService.join(playerO);
 
@@ -115,23 +106,9 @@ public class BattleServiceImplTest {
     void getOpenedNow() {
         List<Battle> battleList = List.of(new Battle());
 
-        Mockito.when(battleRepository.findAllByBattleStatus(Mockito.any())).thenReturn(battleList);
+        when(battleRepository.findAllByBattleStatus(any())).thenReturn(battleList);
 
         assertEquals(battleList, battleService.getOpenedNow());
-    }
-
-    @ParameterizedTest
-    @MethodSource("getArgumentsForThrowException")
-    void makeMove_assertThrowException(BattleStatus battleStatus,
-                                       Class<? extends RuntimeException> classException,
-                                       User player) {
-        Battle battle = anyBattleWithPlayersWithIds(1L, 2L);
-
-        battle.setBattleStatus(battleStatus);
-
-        Mockito.when(battleRepository.getReferenceById(Mockito.any())).thenReturn(battle);
-
-        assertThrows(classException, () -> battleService.makeMove(anyId(), anyStep(), player));
     }
 
     @ParameterizedTest
@@ -140,9 +117,9 @@ public class BattleServiceImplTest {
         Battle battle = anyBattleWithPlayersWithIds(1L, 2L);
         battle.setBattleStatus(battleStatus);
 
-        Mockito.when(battleRepository.getReferenceById(Mockito.any())).thenReturn(battle);
-        Mockito.when(fieldService.move(Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(expectedBattleStatus);
-        Mockito.when(battleRepository.save(Mockito.any())).thenAnswer(invocation -> invocation.getArgument(0));
+        when(battleRepository.getReferenceById(any())).thenReturn(battle);
+        when(fieldService.move(any(), any(), any())).thenReturn(expectedBattleStatus);
+        when(battleRepository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
 
         Battle actualResult = battleService.makeMove(anyId(), anyStep(), player);
 
