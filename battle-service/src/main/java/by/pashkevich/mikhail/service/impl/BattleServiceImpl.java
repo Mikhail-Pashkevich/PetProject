@@ -17,7 +17,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Comparator;
 import java.util.List;
 
 
@@ -44,10 +43,9 @@ public class BattleServiceImpl implements BattleService {
 
     @Override
     public Battle join(User player) {
-        Battle battle = battleRepository.findAllByBattleStatus(BattleStatus.WAIT_FOR_PLAYER)
+        Battle battle = battleRepository.findAllByBattleStatusAndWithoutUser(BattleStatus.WAIT_FOR_PLAYER, player.getId())
                 .stream()
-                .filter(dbBattle -> !isExist(dbBattle, player))
-                .min(Comparator.comparing(Battle::getLastActivityDatetime))
+                .findFirst()
                 .orElseThrow(() -> new NotFoundException("There are no battles without player with id = %d", player.getId()));
 
         setPlayerOnEmptyPlace(battle, player);
