@@ -1,6 +1,5 @@
 package by.pashkevich.mikhail.controller;
 
-import by.pashkevich.mikhail.aspect.AuthUserProvide;
 import by.pashkevich.mikhail.mapper.BattleMapper;
 import by.pashkevich.mikhail.mapper.MoveMapper;
 import by.pashkevich.mikhail.model.User;
@@ -13,6 +12,7 @@ import by.pashkevich.mikhail.service.BattleService;
 import by.pashkevich.mikhail.service.StatisticService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -31,16 +31,14 @@ public class BattleController {
 
 
     @PostMapping
-    @AuthUserProvide
-    public BattleDto create(@Valid @RequestBody CreateDto createDto, User user) {
+    public BattleDto create(@Valid @RequestBody CreateDto createDto, @AuthenticationPrincipal User user) {
         Battle battle = battleService.create(createDto.getValue(), user);
 
         return battleMapper.toBattleDto(battle);
     }
 
     @PostMapping("/join")
-    @AuthUserProvide
-    public BattleDto join(User user) {
+    public BattleDto join(@AuthenticationPrincipal User user) {
 
         Battle battle = battleService.join(user);
 
@@ -48,8 +46,7 @@ public class BattleController {
     }
 
     @PostMapping("/move")
-    @AuthUserProvide
-    public BattleDto makeMove(@Valid @RequestBody MoveDto moveDto, User user) {
+    public BattleDto makeMove(@Valid @RequestBody MoveDto moveDto, @AuthenticationPrincipal User user) {
         Step step = moveMapper.toStep(moveDto);
 
         Battle battle = battleService.makeMove(moveDto.getBattleId(), step, user);

@@ -2,6 +2,7 @@ package by.pashkevich.mikhail.service.impl;
 
 import by.pashkevich.mikhail.exception.NotFoundException;
 import by.pashkevich.mikhail.model.User;
+import by.pashkevich.mikhail.model.security.UserDetailsImpl;
 import by.pashkevich.mikhail.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,15 +20,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 new NotFoundException("Can't find user by current login: %s", username)
         );
 
-        return org.springframework.security.core.userdetails.User
-                .builder()
-                .username(user.getLogin())
-                .password(user.getPassword())
-                .roles(user.getRoles()
-                        .stream()
-                        .map(role -> role.getName().name())
-                        .toArray(String[]::new)
-                )
-                .build();
+        return new UserDetailsImpl(user);
     }
 }
