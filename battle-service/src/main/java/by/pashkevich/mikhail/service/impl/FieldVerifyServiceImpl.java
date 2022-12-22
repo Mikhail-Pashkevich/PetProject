@@ -2,70 +2,91 @@ package by.pashkevich.mikhail.service.impl;
 
 import by.pashkevich.mikhail.model.entity.Field;
 import by.pashkevich.mikhail.model.entity.enums.Value;
+import by.pashkevich.mikhail.model.util.Step;
 import by.pashkevich.mikhail.service.FieldVerifyService;
-import by.pashkevich.mikhail.service.util.field.CheckValue;
-import org.springframework.context.annotation.Primary;
+import by.pashkevich.mikhail.service.SettingService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
-import java.util.List;
-import java.util.stream.IntStream;
 
-import static by.pashkevich.mikhail.service.util.field.CheckValue.ANY;
-import static by.pashkevich.mikhail.service.util.field.CheckValue.VALUE;
 
 @Service
-@Primary
+@RequiredArgsConstructor
 public class FieldVerifyServiceImpl implements FieldVerifyService {
-    //TODO: create more generic logic
-    private static final List<CheckValue[]> winCombinationList = Arrays.asList(
-            new CheckValue[]{VALUE, ANY, ANY, VALUE, ANY, ANY, VALUE, ANY, ANY},    //first column
-            new CheckValue[]{ANY, VALUE, ANY, ANY, VALUE, ANY, ANY, VALUE, ANY},    //second column
-            new CheckValue[]{ANY, ANY, VALUE, ANY, ANY, VALUE, ANY, ANY, VALUE},    //third column
-            new CheckValue[]{VALUE, VALUE, VALUE, ANY, ANY, ANY, ANY, ANY, ANY},    //first row
-            new CheckValue[]{ANY, ANY, ANY, VALUE, VALUE, VALUE, ANY, ANY, ANY},    //second row
-            new CheckValue[]{ANY, ANY, ANY, ANY, ANY, ANY, VALUE, VALUE, VALUE},    //third row
-            new CheckValue[]{VALUE, ANY, ANY, ANY, VALUE, ANY, ANY, ANY, VALUE},    //main diagonal
-            new CheckValue[]{ANY, ANY, VALUE, ANY, VALUE, ANY, VALUE, ANY, ANY}     //secondary diagonal
-    );
-
+    private final SettingService settingService;
 
     @Override
     public boolean isWin(Field field, Value value) {
-        return switch (value) {
-            case VALUE_X, VALUE_O -> winCombinationList.stream()
-                    .anyMatch(winCombination -> isWinField(winCombination, field.getField(), value));
-            case VALUE_EMPTY -> false;
-        };
+        if (Value.VALUE_EMPTY.equals(value)) {
+            return false;
+        }
+
+        boolean isWin = field.getColumns()
+                .stream()
+                .anyMatch(column -> Arrays.stream(column).allMatch(value::equals));
+
+        isWin = isWin || field.getRows()
+                .stream()
+                .anyMatch(row -> Arrays.stream(row).allMatch(value::equals));
+
+        isWin = isWin || Arrays.stream(field.getMainDiagonal()).allMatch(value::equals);
+
+        isWin = isWin || Arrays.stream(field.getSideDiagonal()).allMatch(value::equals);
+
+        return isWin;
     }
 
     @Override
-    public boolean isCorrect(Field field) {
-        return field.isNotFull() && field.isCorrectSize() && isCorrectValues(field.getField());
+    public boolean isCorrectBattleArea(Value[][] battleArea) {
+        return isNotFull(battleArea) && isCorrectSize(battleArea) && isCorrectValues(battleArea);
     }
 
-    private boolean isWinField(CheckValue[] checkValues, Value[] values, Value value) {
-        return IntStream.range(0, checkValues.length).allMatch(i -> isEqualsValues(checkValues[i], values[i], value));
+    @Override
+    public boolean isCorrectStep(Value[][] battleArea, Step step) {
+        return isLess(step.getI(), battleArea.length) && isLess(step.getJ(), battleArea.length)
+                && isEmpty(battleArea, step);
     }
 
-    private boolean isEqualsValues(CheckValue checkValue, Value value1, Value value2) {
-        return switch (checkValue) {
-            case VALUE -> value1.equals(value2);
-            case ANY -> true;
-        };
+    private boolean isNotFull(Value[][] battleArea) {
+        return Arrays.stream(battleArea)
+                .flatMap(Arrays::stream)
+                .toList()
+                .contains(Value.VALUE_EMPTY);
     }
 
-    private boolean isCorrectValues(Value[] field) {
+    private boolean isCorrectSize(Value[][] battleArea) {
+        int rowSize = settingService.getRowSize();
+
+        boolean isCorrect = battleArea.length == rowSize;
+        for (Value[] row : battleArea) {
+            isCorrect = isCorrect && row.length == rowSize;
+        }
+
+        return isCorrect;
+    }
+
+    private boolean isCorrectValues(Value[][] battleArea) {
         int counter = 0;
 
-        for (Value value : field) {
-            if (value.equals(Value.VALUE_X)) {
-                counter++;
-            } else if (value.equals(Value.VALUE_O)) {
-                counter--;
+        for (Value[] row : battleArea) {
+            for (Value cell : row) {
+                if (cell.equals(Value.VALUE_X)) {
+                    counter++;
+                } else if (cell.equals(Value.VALUE_O)) {
+                    counter--;
+                }
             }
         }
 
         return counter == 0 || counter == 1;
+    }
+
+    private boolean isLess(Integer step, int end) {
+        return 0 <= step && step < end;
+    }
+
+    private boolean isEmpty(Value[][] battleArea, Step step) {
+        return Value.VALUE_EMPTY.equals(battleArea[step.getI()][step.getJ()]);
     }
 }

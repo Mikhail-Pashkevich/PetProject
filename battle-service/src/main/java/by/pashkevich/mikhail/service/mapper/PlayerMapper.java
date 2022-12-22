@@ -6,7 +6,5 @@ import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
 public interface PlayerMapper {
-    User toUser(PlayerDto playerDto);
-
     PlayerDto toPlayerDto(User user);
 }

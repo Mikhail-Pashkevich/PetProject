@@ -13,22 +13,30 @@ import static by.pashkevich.mikhail.service.CommonMethods.anyId;
 
 
 public class IsWinArgumentsProvider implements ArgumentsProvider {
+    private final Value[][] arrayWithValueX = {
+            {VALUE_X, VALUE_EMPTY, VALUE_EMPTY},
+            {VALUE_X, VALUE_EMPTY, VALUE_EMPTY},
+            {VALUE_X, VALUE_EMPTY, VALUE_EMPTY}
+    };
+    private final Value[][] arrayWithValueO = {
+            {VALUE_O, VALUE_O, VALUE_O},
+            {VALUE_EMPTY, VALUE_EMPTY, VALUE_EMPTY},
+            {VALUE_EMPTY, VALUE_EMPTY, VALUE_EMPTY}
+    };
+    private final Value[][] emptyArray = {
+            {VALUE_EMPTY, VALUE_EMPTY, VALUE_EMPTY},
+            {VALUE_EMPTY, VALUE_EMPTY, VALUE_EMPTY},
+            {VALUE_EMPTY, VALUE_EMPTY, VALUE_EMPTY}
+    };
+    private final Value[][] arrayWithDifValue = {
+            {VALUE_O, VALUE_EMPTY, VALUE_EMPTY},
+            {VALUE_EMPTY, VALUE_EMPTY, VALUE_EMPTY},
+            {VALUE_EMPTY, VALUE_EMPTY, VALUE_X}
+    };
+
+
     @Override
     public Stream<? extends Arguments> provideArguments(ExtensionContext context) {
-        Value[] arrayWithValueX = {
-                VALUE_X, VALUE_EMPTY, VALUE_EMPTY, VALUE_X, VALUE_EMPTY, VALUE_EMPTY, VALUE_X, VALUE_EMPTY, VALUE_EMPTY
-        };
-        Value[] arrayWithValueO = {
-                VALUE_O, VALUE_O, VALUE_O, VALUE_EMPTY, VALUE_EMPTY, VALUE_EMPTY, VALUE_EMPTY, VALUE_EMPTY, VALUE_EMPTY
-        };
-        Value[] emptyArray = {
-                VALUE_EMPTY, VALUE_EMPTY, VALUE_EMPTY, VALUE_EMPTY, VALUE_EMPTY, VALUE_EMPTY, VALUE_EMPTY, VALUE_EMPTY, VALUE_EMPTY
-        };
-        Value[] arrayWithDifValue = {
-                VALUE_O, VALUE_EMPTY, VALUE_EMPTY, VALUE_EMPTY, VALUE_EMPTY, VALUE_EMPTY, VALUE_EMPTY, VALUE_EMPTY, VALUE_X
-        };
-
-
         return Stream.of(
                 Arguments.of(new Field(anyId(), arrayWithValueX), VALUE_X, true),
                 Arguments.of(new Field(anyId(), arrayWithValueX), VALUE_O, false),

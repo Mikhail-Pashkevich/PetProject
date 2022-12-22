@@ -1,5 +1,6 @@
 package by.pashkevich.mikhail.model;
 
+import by.pashkevich.mikhail.model.enums.Rolename;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,7 +19,8 @@ public class Role {
     private Long id;
 
     @Column
-    private String name;
+    @Enumerated(EnumType.STRING)
+    private Rolename name;
 
     @Transient
     @ManyToMany(mappedBy = "roles")

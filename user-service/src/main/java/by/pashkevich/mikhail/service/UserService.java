@@ -1,23 +1,9 @@
 package by.pashkevich.mikhail.service;
 
 import by.pashkevich.mikhail.model.User;
-import by.pashkevich.mikhail.repository.UserRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 
-@Service
-@RequiredArgsConstructor
-public class UserService {
+public interface UserService {
+    void create(User user);
 
-    private final UserRepository userRepository;
-
-    public void create(User user) {
-        //create user
-    }
-
-    public User getById(Long id) {
-        return userRepository.findById(id).orElseThrow(() -> {
-            throw new UnsupportedOperationException("Not implemented yet!");
-        });
-    }
+    User getAuthenticatedUser();
 }
