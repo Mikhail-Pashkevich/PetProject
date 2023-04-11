@@ -1,4 +1,5 @@
 apply plugin: 'org.springframework.boot'
+apply plugin: 'org.liquibase.gradle'
 
 dependencies {
     implementation project(":user-service")
@@ -7,6 +8,7 @@ dependencies {
     annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.2.Final'
 
     implementation 'org.mapstruct:mapstruct:1.5.2.Final'
+    implementation 'org.liquibase:liquibase-core:4.19.0'
 }
 
 test {
