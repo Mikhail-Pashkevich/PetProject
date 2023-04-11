@@ -1,0 +1,37 @@
+version: '3'
+services:
+  pp-mysql:
+    hostname: pp-mysql
+    container_name: pp-mysql
+    image: mysql:5.7.32
+    restart: unless-stopped
+    ports:
+      - ${DB_PORT}:3306
+    environment:
+       MYSQL_ROOT_PASSWORD: $DB_PASSWORD
+       MYSQL_USER: $DB_USERNAME
+       MYSQL_PASSWORD: $DB_PASSWORD
+       MYSQL_DATABASE: $DB_NAME
+    networks:
+      - pp-network
+
+  api:
+    container_name: pp-api
+    build:
+      context: /
+      dockerfile: /Dockerfile
+    restart: unless-stopped
+    env_file:
+      - .env
+    ports:
+      - 8080:${APP_PORT}
+    depends_on:
+      - pp-mysql
+    networks:
+      - pp-network
+
+networks:
+  pp-network:
+    driver: bridge
+    ipam:
+      driver: default

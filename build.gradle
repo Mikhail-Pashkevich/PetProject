@@ -7,14 +7,14 @@ plugins {
 
 allprojects {
     group = 'by.pashkevich.mikhail'
-    version = '0.0.1-SNAPSHOT'
+    version = '1.0'
 
     apply plugin: 'java'
     apply plugin: 'io.spring.dependency-management'
 
     compileJava {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
+        sourceCompatibility = JavaVersion.VERSION_16
+        targetCompatibility = JavaVersion.VERSION_16
     }
 
     repositories {
@@ -37,8 +37,12 @@ allprojects {
         implementation 'org.springframework.boot:spring-boot-starter-security'
         implementation 'org.springframework.boot:spring-boot-starter-validation'
 
-        implementation 'mysql:mysql-connector-java'
+        runtimeOnly 'mysql:mysql-connector-java'
 
         testImplementation 'org.springframework.boot:spring-boot-starter-test'
     }
+}
+
+bootJar {
+    enabled = false
 }
