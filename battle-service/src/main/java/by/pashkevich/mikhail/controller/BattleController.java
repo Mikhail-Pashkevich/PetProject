@@ -1,5 +1,8 @@
 package by.pashkevich.mikhail.controller;
 
+import by.pashkevich.mikhail.mapper.BattleMapper;
+import by.pashkevich.mikhail.mapper.MoveMapper;
+import by.pashkevich.mikhail.model.User;
 import by.pashkevich.mikhail.model.dto.BattleDto;
 import by.pashkevich.mikhail.model.dto.CreateDto;
 import by.pashkevich.mikhail.model.dto.MoveDto;
@@ -7,10 +10,9 @@ import by.pashkevich.mikhail.model.entity.Battle;
 import by.pashkevich.mikhail.model.util.Step;
 import by.pashkevich.mikhail.service.BattleService;
 import by.pashkevich.mikhail.service.StatisticService;
-import by.pashkevich.mikhail.service.mapper.BattleMapper;
-import by.pashkevich.mikhail.service.mapper.MoveMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -29,25 +31,25 @@ public class BattleController {
 
 
     @PostMapping
-    public BattleDto create(@Valid @RequestBody CreateDto createDto) {
-        Battle battle = battleService.create(createDto.getValue());
+    public BattleDto create(@Valid @RequestBody CreateDto createDto, @AuthenticationPrincipal User user) {
+        Battle battle = battleService.create(createDto.getValue(), user);
 
         return battleMapper.toBattleDto(battle);
     }
 
     @PostMapping("/join")
-    public BattleDto join() {
+    public BattleDto join(@AuthenticationPrincipal User user) {
 
-        Battle battle = battleService.join();
+        Battle battle = battleService.join(user);
 
         return battleMapper.toBattleDto(battle);
     }
 
     @PostMapping("/move")
-    public BattleDto makeMove(@Valid @RequestBody MoveDto moveDto) {
+    public BattleDto makeMove(@Valid @RequestBody MoveDto moveDto, @AuthenticationPrincipal User user) {
         Step step = moveMapper.toStep(moveDto);
 
-        Battle battle = battleService.makeMove(moveDto.getBattleId(), step);
+        Battle battle = battleService.makeMove(moveDto.getBattleId(), step, user);
 
         statisticService.save();
 
