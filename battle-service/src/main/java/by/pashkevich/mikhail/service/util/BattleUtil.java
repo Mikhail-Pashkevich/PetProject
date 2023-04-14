@@ -1,10 +1,10 @@
 package by.pashkevich.mikhail.service.util;
 
+import by.pashkevich.mikhail.entity.Battle;
+import by.pashkevich.mikhail.entity.User;
+import by.pashkevich.mikhail.enums.BattleStatus;
+import by.pashkevich.mikhail.enums.Value;
 import by.pashkevich.mikhail.exception.IncorrectDataException;
-import by.pashkevich.mikhail.model.User;
-import by.pashkevich.mikhail.model.entity.Battle;
-import by.pashkevich.mikhail.model.entity.enums.BattleStatus;
-import by.pashkevich.mikhail.model.entity.enums.Value;
 import lombok.experimental.UtilityClass;
 
 @UtilityClass

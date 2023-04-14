@@ -1,7 +1,7 @@
 package by.pashkevich.mikhail.controller;
 
+import by.pashkevich.mikhail.dto.ResponseExceptionDto;
 import by.pashkevich.mikhail.exception.*;
-import by.pashkevich.mikhail.model.dto.ResponseExceptionDto;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -42,7 +42,7 @@ public class ExceptionController {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
-    @ExceptionHandler(value = {IncorrectDataException.class, DuplicateException.class, BattleUnavailableException.class})
+    @ExceptionHandler(value = {IncorrectDataException.class, BattleUnavailableException.class})
     private ResponseExceptionDto handleException(Exception e) {
         return new ResponseExceptionDto(e.getMessage());
     }

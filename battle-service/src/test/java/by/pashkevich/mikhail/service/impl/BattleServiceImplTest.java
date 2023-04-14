@@ -1,9 +1,9 @@
 package by.pashkevich.mikhail.service.impl;
 
-import by.pashkevich.mikhail.model.User;
-import by.pashkevich.mikhail.model.entity.Battle;
-import by.pashkevich.mikhail.model.entity.enums.BattleStatus;
-import by.pashkevich.mikhail.model.entity.enums.Value;
+import by.pashkevich.mikhail.entity.Battle;
+import by.pashkevich.mikhail.entity.User;
+import by.pashkevich.mikhail.enums.BattleStatus;
+import by.pashkevich.mikhail.enums.Value;
 import by.pashkevich.mikhail.repository.BattleRepository;
 import by.pashkevich.mikhail.service.BattleVerifyService;
 import by.pashkevich.mikhail.service.FieldService;

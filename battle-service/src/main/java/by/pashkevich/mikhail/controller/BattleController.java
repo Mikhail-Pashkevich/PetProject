@@ -1,15 +1,15 @@
 package by.pashkevich.mikhail.controller;
 
+import by.pashkevich.mikhail.client.StatisticClient;
+import by.pashkevich.mikhail.dto.BattleDto;
+import by.pashkevich.mikhail.dto.CreateDto;
+import by.pashkevich.mikhail.dto.MoveDto;
+import by.pashkevich.mikhail.entity.Battle;
+import by.pashkevich.mikhail.entity.Step;
+import by.pashkevich.mikhail.entity.User;
 import by.pashkevich.mikhail.mapper.BattleMapper;
 import by.pashkevich.mikhail.mapper.MoveMapper;
-import by.pashkevich.mikhail.model.User;
-import by.pashkevich.mikhail.model.dto.BattleDto;
-import by.pashkevich.mikhail.model.dto.CreateDto;
-import by.pashkevich.mikhail.model.dto.MoveDto;
-import by.pashkevich.mikhail.model.entity.Battle;
-import by.pashkevich.mikhail.model.util.Step;
 import by.pashkevich.mikhail.service.BattleService;
-import by.pashkevich.mikhail.service.StatisticService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -23,8 +23,8 @@ import java.util.List;
 @RequestMapping("/battle")
 @RequiredArgsConstructor
 public class BattleController {
-    private final StatisticService statisticService;
     private final BattleService battleService;
+    private final StatisticClient statisticClient;
 
     private final BattleMapper battleMapper;
     private final MoveMapper moveMapper;
@@ -51,7 +51,7 @@ public class BattleController {
 
         Battle battle = battleService.makeMove(moveDto.getBattleId(), step, user);
 
-        statisticService.save();
+        statisticClient.save();
 
         return battleMapper.toBattleDto(battle);
     }

@@ -1,7 +1,7 @@
 package by.pashkevich.mikhail.mapper;
 
-import by.pashkevich.mikhail.model.dto.MoveDto;
-import by.pashkevich.mikhail.model.util.Step;
+import by.pashkevich.mikhail.dto.MoveDto;
+import by.pashkevich.mikhail.entity.Step;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

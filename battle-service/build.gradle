@@ -1,12 +1,13 @@
-apply plugin: 'org.springframework.boot'
-
 dependencies {
-    implementation project(":user-service")
-    implementation project(":statistic-service")
-
     annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.2.Final'
 
     implementation 'org.mapstruct:mapstruct:1.5.2.Final'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'io.github.openfeign:feign-okhttp:12.2'
+    implementation 'io.github.openfeign:feign-gson:12.2'
+    implementation 'io.github.openfeign:feign-slf4j:12.2'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
 test {
