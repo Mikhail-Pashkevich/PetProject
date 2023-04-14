@@ -1,7 +1,7 @@
 package by.pashkevich.mikhail.schedule;
 
-import by.pashkevich.mikhail.entity.Battle;
-import by.pashkevich.mikhail.enums.BattleStatus;
+import by.pashkevich.mikhail.model.entity.Battle;
+import by.pashkevich.mikhail.model.entity.enums.BattleStatus;
 import by.pashkevich.mikhail.repository.BattleRepository;
 import by.pashkevich.mikhail.service.SettingService;
 import lombok.RequiredArgsConstructor;

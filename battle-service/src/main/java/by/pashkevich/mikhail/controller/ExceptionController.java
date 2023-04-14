@@ -1,6 +1,6 @@
 package by.pashkevich.mikhail.controller;
 
-import by.pashkevich.mikhail.dto.ResponseExceptionDto;
+import by.pashkevich.mikhail.model.dto.ResponseExceptionDto;
 import by.pashkevich.mikhail.exception.*;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;

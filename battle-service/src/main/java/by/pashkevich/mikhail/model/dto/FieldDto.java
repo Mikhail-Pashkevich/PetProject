@@ -1,6 +1,6 @@
-package by.pashkevich.mikhail.dto;
+package by.pashkevich.mikhail.model.dto;
 
-import by.pashkevich.mikhail.enums.Value;
+import by.pashkevich.mikhail.model.entity.enums.Value;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

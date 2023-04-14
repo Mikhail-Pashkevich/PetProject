@@ -1,11 +1,11 @@
 package by.pashkevich.mikhail.service.impl;
 
-import by.pashkevich.mikhail.entity.Battle;
-import by.pashkevich.mikhail.entity.Field;
-import by.pashkevich.mikhail.entity.Step;
-import by.pashkevich.mikhail.entity.User;
-import by.pashkevich.mikhail.enums.BattleStatus;
-import by.pashkevich.mikhail.enums.Value;
+import by.pashkevich.mikhail.model.entity.Battle;
+import by.pashkevich.mikhail.model.entity.Field;
+import by.pashkevich.mikhail.model.entity.Step;
+import by.pashkevich.mikhail.model.entity.User;
+import by.pashkevich.mikhail.model.entity.enums.BattleStatus;
+import by.pashkevich.mikhail.model.entity.enums.Value;
 import by.pashkevich.mikhail.exception.NotFoundException;
 import by.pashkevich.mikhail.repository.BattleRepository;
 import by.pashkevich.mikhail.service.BattleService;

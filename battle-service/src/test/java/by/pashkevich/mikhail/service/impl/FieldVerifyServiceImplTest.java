@@ -1,8 +1,8 @@
 package by.pashkevich.mikhail.service.impl;
 
-import by.pashkevich.mikhail.entity.Field;
-import by.pashkevich.mikhail.entity.Step;
-import by.pashkevich.mikhail.enums.Value;
+import by.pashkevich.mikhail.model.entity.Field;
+import by.pashkevich.mikhail.model.entity.Step;
+import by.pashkevich.mikhail.model.entity.enums.Value;
 import by.pashkevich.mikhail.service.SettingService;
 import by.pashkevich.mikhail.service.data.IsCorrectArgumentsProvider;
 import by.pashkevich.mikhail.service.data.IsWinArgumentsProvider;

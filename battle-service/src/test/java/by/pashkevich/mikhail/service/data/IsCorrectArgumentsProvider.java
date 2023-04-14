@@ -1,13 +1,13 @@
 package by.pashkevich.mikhail.service.data;
 
-import by.pashkevich.mikhail.enums.Value;
+import by.pashkevich.mikhail.model.entity.enums.Value;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.ArgumentsProvider;
 
 import java.util.stream.Stream;
 
-import static by.pashkevich.mikhail.enums.Value.*;
+import static by.pashkevich.mikhail.model.entity.enums.Value.*;
 
 public class IsCorrectArgumentsProvider implements ArgumentsProvider {
     private final Value[][] fullArray = {

@@ -1,4 +1,4 @@
-package by.pashkevich.mikhail.entity;
+package by.pashkevich.mikhail.model.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

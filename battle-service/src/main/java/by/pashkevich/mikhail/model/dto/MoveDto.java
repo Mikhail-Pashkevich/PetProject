@@ -1,4 +1,4 @@
-package by.pashkevich.mikhail.dto;
+package by.pashkevich.mikhail.model.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

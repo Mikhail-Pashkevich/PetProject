@@ -1,7 +1,7 @@
 package by.pashkevich.mikhail.mapper;
 
-import by.pashkevich.mikhail.dto.BattleDto;
-import by.pashkevich.mikhail.entity.Battle;
+import by.pashkevich.mikhail.model.dto.BattleDto;
+import by.pashkevich.mikhail.model.entity.Battle;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

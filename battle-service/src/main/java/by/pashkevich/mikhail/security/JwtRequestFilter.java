@@ -1,8 +1,8 @@
 package by.pashkevich.mikhail.security;
 
 import by.pashkevich.mikhail.client.UserClient;
-import by.pashkevich.mikhail.dto.UserDto;
-import by.pashkevich.mikhail.entity.User;
+import by.pashkevich.mikhail.model.dto.UserDto;
+import by.pashkevich.mikhail.model.entity.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AbstractAuthenticationToken;

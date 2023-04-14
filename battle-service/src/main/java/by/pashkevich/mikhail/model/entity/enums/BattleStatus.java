@@ -1,4 +1,4 @@
-package by.pashkevich.mikhail.enums;
+package by.pashkevich.mikhail.model.entity.enums;
 
 import java.util.List;
 

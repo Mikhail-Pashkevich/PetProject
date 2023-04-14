@@ -1,4 +1,4 @@
-package by.pashkevich.mikhail.entity.setting;
+package by.pashkevich.mikhail.model.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,11 +11,19 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Entity
 @Table
-public class FieldSetting {
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column
-    private Integer rowSize;
+    private String login;
+
+    @Column
+    private String nickname;
+
+    public User(Long id, String login) {
+        this.id = id;
+        this.login = login;
+    }
 }

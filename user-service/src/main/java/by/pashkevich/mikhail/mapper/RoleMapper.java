@@ -1,6 +1,6 @@
 package by.pashkevich.mikhail.mapper;
 
-import by.pashkevich.mikhail.entity.Role;
+import by.pashkevich.mikhail.model.entity.Role;
 import org.mapstruct.Mapper;
 
 import java.util.Set;
