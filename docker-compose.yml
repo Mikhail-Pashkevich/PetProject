@@ -15,16 +15,46 @@ services:
     networks:
       - pp-network
 
-  api:
-    container_name: pp-api
+  pp-battle:
+    container_name: pp-battle
     build:
-      context: /
+      context: /battle-service
       dockerfile: /Dockerfile
     restart: unless-stopped
     env_file:
       - .env
     ports:
-      - 8080:${APP_PORT}
+      - 8080:${BATTLE_PORT}
+    depends_on:
+      - pp-mysql
+    networks:
+      - pp-network
+
+  pp-user:
+    container_name: pp-user
+    build:
+      context: /user-service
+      dockerfile: /Dockerfile
+    restart: unless-stopped
+    env_file:
+      - .env
+    ports:
+      - ${USER_PORT}:${USER_PORT}
+    depends_on:
+      - pp-mysql
+    networks:
+      - pp-network
+
+  pp-statistic:
+    container_name: pp-statistic
+    build:
+      context: /statistic-service
+      dockerfile: /Dockerfile
+    restart: unless-stopped
+    env_file:
+      - .env
+    ports:
+      - ${STATISTIC_PORT}:${STATISTIC_PORT}
     depends_on:
       - pp-mysql
     networks:
