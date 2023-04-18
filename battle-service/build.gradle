@@ -1,7 +1,8 @@
-dependencies {
-    annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.2.Final'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'org.liquibase.gradle'
 
-    implementation 'org.mapstruct:mapstruct:1.5.2.Final'
+dependencies {
+    implementation 'org.liquibase:liquibase-core:4.19.0'
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'io.github.openfeign:feign-okhttp:12.2'
     implementation 'io.github.openfeign:feign-gson:12.2'
