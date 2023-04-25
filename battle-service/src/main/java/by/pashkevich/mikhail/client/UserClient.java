@@ -1,12 +1,12 @@
 package by.pashkevich.mikhail.client;
 
 import by.pashkevich.mikhail.model.dto.UserDto;
-import feign.Headers;
-import feign.Param;
-import feign.RequestLine;
+import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 
+@FeignClient(name = "userClient", url = "${app.vars.user.url}")
 public interface UserClient {
-    @RequestLine("GET /auth")
-    @Headers("Authorization: {token}")
-    UserDto getUser(@Param("token") String token);
+    @GetMapping(value = "/auth")
+    UserDto getUser(@RequestHeader("Authorization") String token);
 }
