@@ -20,14 +20,10 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @RequiredArgsConstructor
 public class AppConfig {
     private final SettingService settingService;
-    @Value("${app.vars.user.host}")
-    private String userHost;
-    @Value("${app.vars.user.port}")
-    private String userPort;
-    @Value("${app.vars.statistic.host}")
-    private String statisticHost;
-    @Value("${app.vars.statistic.port}")
-    private String statisticPort;
+    @Value("${app.vars.user.url}")
+    private String userUrl;
+    @Value("${app.vars.statistic.url}")
+    private String statisticUrl;
 
     @Bean
     public String getFixedRateSetting() {
@@ -42,7 +38,7 @@ public class AppConfig {
                 .decoder(new GsonDecoder())
                 .logger(new Slf4jLogger(UserClient.class))
                 .logLevel(Logger.Level.FULL)
-                .target(UserClient.class, String.format("http://%s:%s/user", userHost, userPort));
+                .target(UserClient.class, userUrl);
     }
 
     @Bean
@@ -53,6 +49,6 @@ public class AppConfig {
                 .decoder(new GsonDecoder())
                 .logger(new Slf4jLogger(StatisticClient.class))
                 .logLevel(Logger.Level.FULL)
-                .target(StatisticClient.class, String.format("http://%s:%s", statisticHost, statisticPort));
+                .target(StatisticClient.class, statisticUrl);
     }
 }
