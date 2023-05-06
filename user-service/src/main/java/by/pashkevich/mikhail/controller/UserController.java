@@ -30,4 +30,9 @@ public class UserController {
     public void signUp(@RequestBody User user) {
         userService.create(user);
     }
+
+    @GetMapping("/jwt/{jwt}")
+    public String getJwt(@PathVariable String jwt) {
+        return jwt;
+    }
 }

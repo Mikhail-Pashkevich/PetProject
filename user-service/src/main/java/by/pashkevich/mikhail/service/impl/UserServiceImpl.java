@@ -1,10 +1,10 @@
 package by.pashkevich.mikhail.service.impl;
 
+import by.pashkevich.mikhail.exception.DuplicateException;
+import by.pashkevich.mikhail.exception.NotFoundException;
 import by.pashkevich.mikhail.model.entity.Role;
 import by.pashkevich.mikhail.model.entity.User;
 import by.pashkevich.mikhail.model.entity.enums.Rolename;
-import by.pashkevich.mikhail.exception.DuplicateException;
-import by.pashkevich.mikhail.exception.NotFoundException;
 import by.pashkevich.mikhail.repository.RoleRepository;
 import by.pashkevich.mikhail.repository.UserRepository;
 import by.pashkevich.mikhail.service.JwtService;
