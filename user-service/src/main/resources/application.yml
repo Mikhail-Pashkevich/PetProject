@@ -1,0 +1,34 @@
+server:
+  port: ${USER_PORT:8081}
+
+logging:
+  level:
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+
+spring:
+  datasource:
+    url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME:PetProject}
+    driverClassName: com.mysql.cj.jdbc.Driver
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:12345}
+
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: 874170830669-3n2aal6gienqqucugvnilcrmbnuvq1fs.apps.googleusercontent.com
+            client-secret: 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
+          custom-client-oidc:
+            client-id: ${AUTH_SERVER_CLIENT_ID:custom-client}
+            client-secret: ${AUTH_SERVER_CLIENT_SECRET:secret}
+            authorization-grant-type: authorization_code
+            redirect-uri: ${AUTH_SERVER_REDIRECT_URI:http://127.0.0.1:8081/login/oauth2/code/custom-client-oidc}
+            scope: openid, profile
+            client-name: custom-client-oidc
+            provider: custom-provider
+
+        provider:
+          custom-provider:
+            issuer-uri: ${AUTH_SERVER_URL:http://localhost:9000}

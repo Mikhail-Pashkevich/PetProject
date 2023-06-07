@@ -26,6 +26,7 @@ public class AuthenticationSuccessHandlerImpl implements AuthenticationSuccessHa
         if (!Boolean.TRUE.equals(claims.get("email_verified"))) {
             return;
         }
+        //TODO: check is exists
         String jwt = jwtService.createJwt(claims.get("email").toString());
 
         try {
