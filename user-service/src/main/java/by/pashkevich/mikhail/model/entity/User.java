@@ -33,4 +33,8 @@ public class User {
 
     @Column
     private String nickname;
+
+    public User(String login) {
+        this.login = login;
+    }
 }

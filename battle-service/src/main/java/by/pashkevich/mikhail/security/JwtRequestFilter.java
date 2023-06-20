@@ -3,6 +3,7 @@ package by.pashkevich.mikhail.security;
 import by.pashkevich.mikhail.client.UserClient;
 import by.pashkevich.mikhail.model.dto.UserDto;
 import by.pashkevich.mikhail.model.entity.User;
+import by.pashkevich.mikhail.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -12,7 +13,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -35,7 +35,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
-        String jwt = getJwt(request);
+        String jwt = SecurityUtil.getAuthValue(request, SecurityUtil.RequestType.BEARER);
 
         if (jwt == null) {
             log.info("REQUEST DON'T HAVE JWT");
@@ -60,14 +60,6 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
         log.info("USER IS NOT AUTHORIZED");
         filterChain.doFilter(request, response);
-    }
-
-    private String getJwt(HttpServletRequest request) {
-        String headerAuth = request.getHeader(HttpHeaders.AUTHORIZATION);
-        if (StringUtils.hasText(headerAuth) && headerAuth.startsWith("Bearer ")) {
-            return headerAuth.substring(7);
-        }
-        return null;
     }
 
     private void authorizeUser(UserDto userDto, HttpServletRequest request) {
