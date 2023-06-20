@@ -24,7 +24,7 @@ services:
     env_file:
       - .env
     ports:
-      - 8080:${BATTLE_PORT}
+      - ${BATTLE_PORT}:${BATTLE_PORT}
     depends_on:
       - pp-mysql
     networks:
@@ -55,6 +55,21 @@ services:
       - .env
     ports:
       - ${STATISTIC_PORT}:${STATISTIC_PORT}
+    depends_on:
+      - pp-mysql
+    networks:
+      - pp-network
+
+  pp-auth-server:
+    container_name: pp-auth-server
+    build:
+      context: /auth-service
+      dockerfile: /Dockerfile
+    restart: unless-stopped
+    env_file:
+      - .env
+    ports:
+      - ${AUTH_SERVER_PORT}:${AUTH_SERVER_PORT}
     depends_on:
       - pp-mysql
     networks:
