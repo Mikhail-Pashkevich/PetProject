@@ -17,15 +17,16 @@ spring:
     oauth2:
       client:
         registration:
-          google:
-            client-id: 874170830669-3n2aal6gienqqucugvnilcrmbnuvq1fs.apps.googleusercontent.com
-            client-secret: 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
+          #          google:
+          #            client-id: 874170830669-3n2aal6gienqqucugvnilcrmbnuvq1fs.apps.googleusercontent.com
+          #            client-secret: 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
+          #            client-name: google
           custom-client-oidc:
             client-id: ${AUTH_SERVER_CLIENT_ID:custom-client}
             client-secret: ${AUTH_SERVER_CLIENT_SECRET:secret}
             authorization-grant-type: authorization_code
             redirect-uri: ${AUTH_SERVER_REDIRECT_URI:http://127.0.0.1:8081/login/oauth2/code/custom-client-oidc}
-            scope: openid, profile
+            scope: openid
             client-name: custom-client-oidc
             provider: custom-provider
 
