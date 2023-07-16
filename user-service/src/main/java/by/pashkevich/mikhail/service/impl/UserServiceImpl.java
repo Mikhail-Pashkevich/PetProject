@@ -23,6 +23,15 @@ public class UserServiceImpl implements UserService {
     private final JwtService jwtService;
 
     @Override
+    public String getJwt(User user) {
+        User dbUser = getByLogin(user.getLogin());
+        if (passwordEncoder.matches(user.getPassword(), dbUser.getPassword())) {
+            return jwtService.createJwt(user.getLogin());
+        }
+        return null;
+    }
+
+    @Override
     public User getByJwt(String jwt) {
         String username = jwtService.getUsername(jwt);
         return getByLogin(username);
@@ -37,9 +46,7 @@ public class UserServiceImpl implements UserService {
                 new NotFoundException("Can't find role with name = " + Rolename.USER)
         );
         user.getRoles().add(role);
-        if (user.getPassword() != null) {
-            user.setPassword(passwordEncoder.encode(user.getPassword()));
-        }
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
     }
 
