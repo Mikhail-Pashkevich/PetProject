@@ -67,6 +67,7 @@ public class AuthorizationServerConfig {
                 .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
                 .redirectUri(redirectUri)
                 .scope(OidcScopes.OPENID)
+                .scope(OidcScopes.PROFILE)
                 .build();
 
         return new InMemoryRegisteredClientRepository(registeredClient);
