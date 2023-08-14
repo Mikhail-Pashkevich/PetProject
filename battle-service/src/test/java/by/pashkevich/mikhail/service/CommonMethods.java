@@ -26,7 +26,6 @@ public class CommonMethods {
 
         user.setId(0L);
         user.setLogin("anyLogin");
-        user.setPassword("anyPassword");
 
         return user;
     }
@@ -36,7 +35,6 @@ public class CommonMethods {
 
         user.setId(id);
         user.setLogin("anyLogin");
-        user.setPassword("anyPassword");
 
         return user;
     }
