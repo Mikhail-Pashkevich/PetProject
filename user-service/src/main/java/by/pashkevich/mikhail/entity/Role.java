@@ -1,6 +1,6 @@
-package by.pashkevich.mikhail.model.entity;
+package by.pashkevich.mikhail.entity;
 
-import by.pashkevich.mikhail.model.entity.enums.Rolename;
+import by.pashkevich.mikhail.entity.enums.Rolename;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

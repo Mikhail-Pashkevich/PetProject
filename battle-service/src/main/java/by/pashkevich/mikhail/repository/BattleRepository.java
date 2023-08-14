@@ -1,7 +1,7 @@
 package by.pashkevich.mikhail.repository;
 
-import by.pashkevich.mikhail.model.entity.Battle;
-import by.pashkevich.mikhail.model.entity.enums.BattleStatus;
+import by.pashkevich.mikhail.entity.Battle;
+import by.pashkevich.mikhail.entity.enums.BattleStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
