@@ -42,7 +42,7 @@ public class ExceptionController {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
-    @ExceptionHandler(value = {IncorrectDataException.class, DuplicateException.class, BattleUnavailableException.class})
+    @ExceptionHandler(value = {IncorrectDataException.class, BattleUnavailableException.class})
     private ResponseExceptionDto handleException(Exception e) {
         return new ResponseExceptionDto(e.getMessage());
     }
