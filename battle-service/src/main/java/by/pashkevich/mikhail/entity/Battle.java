@@ -1,7 +1,6 @@
-package by.pashkevich.mikhail.model.entity;
+package by.pashkevich.mikhail.entity;
 
-import by.pashkevich.mikhail.model.User;
-import by.pashkevich.mikhail.model.entity.enums.BattleStatus;
+import by.pashkevich.mikhail.entity.enums.BattleStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

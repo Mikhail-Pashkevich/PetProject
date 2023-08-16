@@ -1,14 +1,14 @@
 package by.pashkevich.mikhail.controller;
 
 import by.pashkevich.mikhail.client.StatisticClient;
+import by.pashkevich.mikhail.dto.BattleDto;
+import by.pashkevich.mikhail.dto.CreateDto;
+import by.pashkevich.mikhail.dto.MoveDto;
+import by.pashkevich.mikhail.entity.Battle;
+import by.pashkevich.mikhail.entity.Step;
+import by.pashkevich.mikhail.entity.User;
 import by.pashkevich.mikhail.mapper.BattleMapper;
 import by.pashkevich.mikhail.mapper.MoveMapper;
-import by.pashkevich.mikhail.model.User;
-import by.pashkevich.mikhail.model.dto.BattleDto;
-import by.pashkevich.mikhail.model.dto.CreateDto;
-import by.pashkevich.mikhail.model.dto.MoveDto;
-import by.pashkevich.mikhail.model.entity.Battle;
-import by.pashkevich.mikhail.model.util.Step;
 import by.pashkevich.mikhail.service.BattleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.annotation.Secured;

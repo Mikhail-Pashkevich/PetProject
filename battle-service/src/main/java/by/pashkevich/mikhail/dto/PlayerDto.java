@@ -1,4 +1,4 @@
-package by.pashkevich.mikhail.model.util;
+package by.pashkevich.mikhail.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Step {
-    private Integer i;
-    private Integer j;
+public class PlayerDto {
+    private String nickname;
 }

@@ -1,11 +1,11 @@
 package by.pashkevich.mikhail.service.impl;
 
+import by.pashkevich.mikhail.entity.Battle;
+import by.pashkevich.mikhail.entity.User;
+import by.pashkevich.mikhail.entity.enums.BattleStatus;
 import by.pashkevich.mikhail.exception.AccessException;
 import by.pashkevich.mikhail.exception.BattleUnavailableException;
 import by.pashkevich.mikhail.exception.IncorrectDataException;
-import by.pashkevich.mikhail.model.User;
-import by.pashkevich.mikhail.model.entity.Battle;
-import by.pashkevich.mikhail.model.entity.enums.BattleStatus;
 import by.pashkevich.mikhail.service.BattleVerifyService;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;

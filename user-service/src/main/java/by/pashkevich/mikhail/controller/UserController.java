@@ -1,8 +1,8 @@
 package by.pashkevich.mikhail.controller;
 
+import by.pashkevich.mikhail.dto.UserDto;
+import by.pashkevich.mikhail.entity.User;
 import by.pashkevich.mikhail.mapper.UserMapper;
-import by.pashkevich.mikhail.model.dto.UserDto;
-import by.pashkevich.mikhail.model.entity.User;
 import by.pashkevich.mikhail.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;

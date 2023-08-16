@@ -1,4 +1,4 @@
-package by.pashkevich.mikhail.model.entity.enums;
+package by.pashkevich.mikhail.entity.enums;
 
 public enum Value {
     VALUE_X,

@@ -1,10 +1,10 @@
 package by.pashkevich.mikhail.service.impl;
 
+import by.pashkevich.mikhail.entity.Field;
+import by.pashkevich.mikhail.entity.Step;
+import by.pashkevich.mikhail.entity.enums.BattleStatus;
+import by.pashkevich.mikhail.entity.enums.Value;
 import by.pashkevich.mikhail.exception.IncorrectDataException;
-import by.pashkevich.mikhail.model.entity.Field;
-import by.pashkevich.mikhail.model.entity.enums.BattleStatus;
-import by.pashkevich.mikhail.model.entity.enums.Value;
-import by.pashkevich.mikhail.model.util.Step;
 import by.pashkevich.mikhail.repository.FieldRepository;
 import by.pashkevich.mikhail.service.FieldService;
 import by.pashkevich.mikhail.service.FieldVerifyService;

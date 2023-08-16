@@ -1,10 +1,10 @@
 package by.pashkevich.mikhail.service;
 
-import by.pashkevich.mikhail.model.User;
-import by.pashkevich.mikhail.model.entity.Battle;
-import by.pashkevich.mikhail.model.entity.Field;
-import by.pashkevich.mikhail.model.entity.enums.Value;
-import by.pashkevich.mikhail.model.util.Step;
+import by.pashkevich.mikhail.entity.Battle;
+import by.pashkevich.mikhail.entity.Field;
+import by.pashkevich.mikhail.entity.Step;
+import by.pashkevich.mikhail.entity.User;
+import by.pashkevich.mikhail.entity.enums.Value;
 
 import java.util.Arrays;
 
