@@ -7,6 +7,13 @@ spring:
     driverClassName: com.mysql.cj.jdbc.Driver
     username: ${DB_USERNAME:root}
     password: ${DB_PASSWORD:12345}
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: 874170830669-3n2aal6gienqqucugvnilcrmbnuvq1fs.apps.googleusercontent.com
+            client-secret: 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
 
 logging:
   level:
