@@ -1,5 +1,6 @@
 package by.pashkevich.mikhail.entity;
 
+import by.pashkevich.mikhail.entity.enums.Rolename;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,22 +13,16 @@ import java.util.Set;
 @NoArgsConstructor
 @Entity
 @Table
-public class User {
+public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column
-    private String login;
+    @Enumerated(EnumType.STRING)
+    private Rolename name;
 
-    @Column
-    private String nickname;
-
-    @ManyToMany
-    @JoinTable(
-            name = "user_roles",
-            joinColumns = {@JoinColumn(name = "user_id")},
-            inverseJoinColumns = {@JoinColumn(name = "role_id")}
-    )
-    private Set<Role> roles;
+    @Transient
+    @ManyToMany(mappedBy = "roles")
+    private Set<User> users;
 }

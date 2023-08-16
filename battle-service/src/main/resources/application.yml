@@ -8,8 +8,13 @@ spring:
     username: ${DB_USERNAME:root}
     password: ${DB_PASSWORD:12345}
   liquibase:
-    enabled: 'true'
+    enabled: true
     change-log: classpath:liquibase/changelog.xml
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: https://accounts.google.com
 
 logging:
   level:
@@ -18,7 +23,5 @@ logging:
 
 app:
   vars:
-    user:
-      url: http://${USER_HOST:localhost}:${USER_PORT:8081}/user
     statistic:
       url: http://${STATISTIC_HOST:localhost}:${STATISTIC_PORT:8082}
