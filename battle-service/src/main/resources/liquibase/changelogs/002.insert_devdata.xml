@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+
+    <changeSet id="002.insert_devdata" author="pashkevich.michael">
+        <!--    password is 123456    -->
+        <insert tableName="user">
+            <column name="login" value="login1"/>
+            <column name="password" value="$2a$10$ya5CtEj.6MOcs/iXfc.8buQnfOcJVrKr/ReAaNsyZrywJ2h1Gb6KS"/>
+            <column name="nickname" value="nickname1"/>
+        </insert>
+        <insert tableName="user">
+            <column name="login" value="login2"/>
+            <column name="password" value="$2a$10$Q8debAEzmMbfqDabNa3T..MrI/6Smlkc4fI7mTX2Hk3eMtgC4dcqW"/>
+            <column name="nickname" value="nickname2"/>
+        </insert>
+        <insert tableName="user">
+            <column name="login" value="login3"/>
+            <column name="password" value="$2a$10$MPx5uLyhoH/flIZvfJ0GqO2L7fva7/j7GMu/uWk7UIJTSlQC.ctnS"/>
+            <column name="nickname" value="nickname3"/>
+        </insert>
+
+        <insert tableName="role">
+            <column name="name" value="USER"/>
+        </insert>
+
+        <insert tableName="user_roles">
+            <column name="user_id" value="1"/>
+            <column name="role_id" value="1"/>
+        </insert>
+        <insert tableName="user_roles">
+            <column name="user_id" value="2"/>
+            <column name="role_id" value="1"/>
+        </insert>
+
+        <insert tableName="field_setting">
+            <column name="row_size" value="3"/>
+        </insert>
+
+        <insert tableName="schedule_setting">
+            <column name="fixed_rate" value="PT30M"/>
+            <column name="move_waiting_time" value="PT1H"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>
