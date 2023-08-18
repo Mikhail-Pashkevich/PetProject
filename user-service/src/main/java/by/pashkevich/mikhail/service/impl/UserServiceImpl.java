@@ -36,7 +36,9 @@ public class UserServiceImpl implements UserService {
         roles = Objects.requireNonNullElseGet(roles, HashSet::new);
         roles.add(role);
         user.setRoles(roles);
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        if (user.getPassword() != null && !user.getPassword().isBlank()) {
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+        }
         return userRepository.save(user);
     }
 
