@@ -6,7 +6,7 @@ services:
     image: mysql:5.7.32
     restart: unless-stopped
     ports:
-      - ${DB_PORT}:3306
+      - 3307:${DB_PORT}
     environment:
        MYSQL_ROOT_PASSWORD: $DB_PASSWORD
        MYSQL_USER: $DB_USERNAME
