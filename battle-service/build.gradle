@@ -1,6 +1,6 @@
 plugins {
-    id 'org.springframework.boot' version '2.7.3'
-    id 'io.spring.dependency-management' version '1.0.13.RELEASE'
+    id 'org.springframework.boot' version '3.1.0'
+    id 'io.spring.dependency-management' version '1.1.0'
     id 'java'
     id 'org.liquibase.gradle' version '2.0.4'
 }
@@ -9,8 +9,8 @@ group = 'by.pashkevich.mikhail'
 version = '1.0'
 
 compileJava {
-    sourceCompatibility = JavaVersion.VERSION_16
-    targetCompatibility = JavaVersion.VERSION_16
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
 }
 
 repositories {
@@ -19,7 +19,7 @@ repositories {
 
 dependencyManagement {
     imports {
-        mavenBom("org.springframework.boot:spring-boot-dependencies:2.7.3")
+        mavenBom("org.springframework.boot:spring-boot-dependencies:3.1.0")
     }
 }
 
@@ -35,9 +35,9 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-security'
-    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign:3.1.6'
+    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign:4.0.4'
 
-    runtimeOnly 'mysql:mysql-connector-java'
+    runtimeOnly 'com.mysql:mysql-connector-j:8.1.0'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
