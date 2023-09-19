@@ -1,6 +1,6 @@
 package by.pashkevich.mikhail.controller;
 
-import by.pashkevich.mikhail.client.StatisticClient;
+import by.pashkevich.mikhail.annotation.Statistic;
 import by.pashkevich.mikhail.dto.BattleDto;
 import by.pashkevich.mikhail.dto.CreateDto;
 import by.pashkevich.mikhail.dto.MoveDto;
@@ -23,14 +23,13 @@ import java.util.List;
 @RequestMapping("/battle")
 @RequiredArgsConstructor
 public class BattleController {
-    private final StatisticClient statisticClient;
-
     private final BattleService battleService;
 
     private final BattleMapper battleMapper;
     private final MoveMapper moveMapper;
 
 
+    @Statistic(message = "user create new battle")
     @PostMapping
     public BattleDto create(@Valid @RequestBody CreateDto createDto, @AuthenticationPrincipal User user) {
         Battle battle = battleService.create(createDto.getValue(), user);
@@ -38,25 +37,25 @@ public class BattleController {
         return battleMapper.toBattleDto(battle);
     }
 
+    @Statistic(message = "user join to any battle")
     @PostMapping("/join")
     public BattleDto join(@AuthenticationPrincipal User user) {
-
         Battle battle = battleService.join(user);
 
         return battleMapper.toBattleDto(battle);
     }
 
+    @Statistic(message = "user make move")
     @PostMapping("/move")
     public BattleDto makeMove(@Valid @RequestBody MoveDto moveDto, @AuthenticationPrincipal User user) {
         Step step = moveMapper.toStep(moveDto);
 
         Battle battle = battleService.makeMove(moveDto.getBattleId(), step, user);
 
-        statisticClient.save();
-
         return battleMapper.toBattleDto(battle);
     }
 
+    @Statistic(message = "user get all opened battles")
     @GetMapping
     public List<BattleDto> openedNow() {
         List<Battle> battleList = battleService.getOpenedNow();
