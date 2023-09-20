@@ -2,13 +2,10 @@ server:
   port: ${STATISTIC_PORT:8082}
 
 spring:
-  datasource:
-    url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME:PetProject}
-    driverClassName: com.mysql.cj.jdbc.Driver
-    username: ${DB_USERNAME:root}
-    password: ${DB_PASSWORD:12345}
+  data:
+    mongodb:
+      uri: mongodb://${MONGO_DB_USERNAME:root}:${MONGO_DB_PASSWORD:12345}@${MONGO_DB_HOST:localhost}:${MONGO_DB_PORT:27017}/${MONGO_DB_NAME:PetProject_Statistic}?authMechanism=SCRAM-SHA-1&authSource=admin
 
 logging:
   level:
-    org.hibernate.SQL: DEBUG
-    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+    org.springframework.data.mongodb.core.MongoTemplate: DEBUG

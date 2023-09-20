@@ -1,19 +1,15 @@
-package by.pashkevich.mikhail.entity;
+package by.pashkevich.mikhail.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-@Document("statistic")
-public class Statistic {
-    @Id
+public class StatisticDto {
     private String id;
     private String message;
     private Object[] args;
