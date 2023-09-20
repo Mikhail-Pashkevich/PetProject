@@ -15,13 +15,13 @@ import java.util.Set;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    protected Long id;
+    private Long id;
 
     @Column
-    protected String login;
+    private String login;
 
     @Column
-    protected String password;
+    private String password;
 
     @ManyToMany
     @JoinTable(
@@ -29,8 +29,12 @@ public class User {
             joinColumns = {@JoinColumn(name = "user_id")},
             inverseJoinColumns = {@JoinColumn(name = "role_id")}
     )
-    protected Set<Role> roles;
+    private Set<Role> roles;
 
     @Column
     private String nickname;
+
+    public User(String login) {
+        this.login = login;
+    }
 }

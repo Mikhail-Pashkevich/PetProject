@@ -7,4 +7,5 @@ https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
 
     <include file="liquibase/changelogs/001.create_tables.xml"/>
     <include file="liquibase/changelogs/002.insert_devdata.xml"/>
+    <include file="liquibase/changelogs/003.change_user.xml"/>
 </databaseChangeLog>
