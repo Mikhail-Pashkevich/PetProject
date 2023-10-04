@@ -6,6 +6,7 @@ spring:
     mongodb:
       uri: ${MONGO_DB_URI:mongodb://localhost:27017/PetProject_Statistic}
   kafka:
+    bootstrap-servers: ${KAFKA_HOST:localhost}:${KAFKA_PORT:9092}
     consumer:
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       properties:

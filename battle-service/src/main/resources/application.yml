@@ -16,6 +16,7 @@ spring:
         jwt:
           issuer-uri: https://accounts.google.com
   kafka:
+    bootstrap-servers: ${KAFKA_HOST:localhost}:${KAFKA_PORT:9092}
     producer:
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
       properties:

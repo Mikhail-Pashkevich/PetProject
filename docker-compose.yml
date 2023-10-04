@@ -28,6 +28,35 @@ services:
     networks:
       - pp-network
 
+  pp-zookeeper:
+    hostname: pp-zookeeper
+    container_name: pp-zookeeper
+    image: confluentinc/cp-zookeeper:7.5.0
+    environment:
+      ZOOKEEPER_CLIENT_PORT: ${ZOOKEEPER_PORT}
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - 22181:${ZOOKEEPER_PORT}
+    networks:
+      - pp-network
+
+  pp-kafka:
+    hostname: pp-kafka
+    container_name: pp-kafka
+    image: confluentinc/cp-kafka:7.5.0
+    ports:
+      - 19092:${KAFKA_PORT}
+    environment:
+      KAFKA_ZOOKEEPER_CONNECT: ${ZOOKEEPER_HOST}:${ZOOKEEPER_PORT}
+      KAFKA_ADVERTISED_LISTENERS: INTERNAL_PROTOCOL://pp-kafka:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL_PROTOCOL:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL_PROTOCOL
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    depends_on:
+      - pp-zookeeper
+    networks:
+      - pp-network
+
   pp-battle:
     container_name: pp-battle
     build:
@@ -40,6 +69,7 @@ services:
       - 8080:${BATTLE_PORT}
     depends_on:
       - pp-mysql
+      - pp-kafka
     networks:
       - pp-network
 
@@ -70,6 +100,7 @@ services:
       - ${STATISTIC_PORT}:${STATISTIC_PORT}
     depends_on:
       - pp-mongo
+      - pp-kafka
     networks:
       - pp-network
 
