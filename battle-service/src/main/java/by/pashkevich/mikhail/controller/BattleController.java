@@ -1,6 +1,5 @@
 package by.pashkevich.mikhail.controller;
 
-import by.pashkevich.mikhail.client.StatisticClient;
 import by.pashkevich.mikhail.dto.BattleDto;
 import by.pashkevich.mikhail.dto.CreateDto;
 import by.pashkevich.mikhail.dto.MoveDto;
@@ -23,8 +22,6 @@ import java.util.List;
 @RequestMapping("/battle")
 @RequiredArgsConstructor
 public class BattleController {
-    private final StatisticClient statisticClient;
-
     private final BattleService battleService;
 
     private final BattleMapper battleMapper;
@@ -40,7 +37,6 @@ public class BattleController {
 
     @PostMapping("/join")
     public BattleDto join(@AuthenticationPrincipal User user) {
-
         Battle battle = battleService.join(user);
 
         return battleMapper.toBattleDto(battle);
@@ -51,8 +47,6 @@ public class BattleController {
         Step step = moveMapper.toStep(moveDto);
 
         Battle battle = battleService.makeMove(moveDto.getBattleId(), step, user);
-
-        statisticClient.save();
 
         return battleMapper.toBattleDto(battle);
     }
