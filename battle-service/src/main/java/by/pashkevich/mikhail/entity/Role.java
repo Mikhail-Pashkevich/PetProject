@@ -1,11 +1,11 @@
 package by.pashkevich.mikhail.entity;
 
 import by.pashkevich.mikhail.entity.enums.Rolename;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
 import java.util.Set;
 
 @Data

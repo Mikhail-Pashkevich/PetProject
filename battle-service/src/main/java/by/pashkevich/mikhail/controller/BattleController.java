@@ -10,12 +10,12 @@ import by.pashkevich.mikhail.entity.User;
 import by.pashkevich.mikhail.mapper.BattleMapper;
 import by.pashkevich.mikhail.mapper.MoveMapper;
 import by.pashkevich.mikhail.service.BattleService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.List;
 
 @Secured("ROLE_USER")
