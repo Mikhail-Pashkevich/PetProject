@@ -1,5 +1,7 @@
 package by.pashkevich.mikhail.service;
 
+import by.pashkevich.mikhail.entity.Statistic;
+
 public interface StatisticService {
-    void save();
+    void save(Statistic statistic);
 }

@@ -2,13 +2,10 @@ server:
   port: ${STATISTIC_PORT:8082}
 
 spring:
-  datasource:
-    url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME:PetProject}
-    driverClassName: com.mysql.cj.jdbc.Driver
-    username: ${DB_USERNAME:root}
-    password: ${DB_PASSWORD:12345}
+  data:
+    mongodb:
+      uri: ${MONGO_DB_URI:mongodb://localhost:27017/PetProject_Statistic}
 
 logging:
   level:
-    org.hibernate.SQL: DEBUG
-    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+    org.springframework.data.mongodb.core.MongoTemplate: DEBUG
