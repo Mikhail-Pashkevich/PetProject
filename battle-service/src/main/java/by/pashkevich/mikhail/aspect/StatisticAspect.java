@@ -1,16 +1,12 @@
 package by.pashkevich.mikhail.aspect;
 
-import by.pashkevich.mikhail.annotation.Statistic;
 import by.pashkevich.mikhail.config.KafkaConfig;
 import by.pashkevich.mikhail.dto.StatisticDto;
 import lombok.RequiredArgsConstructor;
-import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
-import org.aspectj.lang.annotation.AfterThrowing;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
-import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 
@@ -21,28 +17,15 @@ public class StatisticAspect {
 
     private final KafkaTemplate<Object, Object> kafkaTemplate;
 
-    @Pointcut("@annotation(by.pashkevich.mikhail.annotation.Statistic)")
-    public void annotationStatisticPointCut() {
+    @Pointcut("execution(public * by.pashkevich.mikhail.repository.BattleRepository.save(*))")
+    public void executionBattleRepositorySavePointCut() {
     }
 
-    @Around("annotationStatisticPointCut()")
+    @Around("executionBattleRepositorySavePointCut()")
     public Object saveStatisticAround(ProceedingJoinPoint joinPoint) throws Throwable {
-        Statistic annotation = ((MethodSignature) joinPoint.getSignature()).getMethod().getAnnotation(Statistic.class);
-        String annotationMessage = annotation.message();
-        Object[] args = joinPoint.getArgs();
         Object result = joinPoint.proceed();
-        StatisticDto statisticDto = new StatisticDto(annotationMessage, args, result);
+        StatisticDto statisticDto = new StatisticDto(result);
         kafkaTemplate.send(KafkaConfig.STATISTIC_TOPIC_NAME, statisticDto);
         return result;
-    }
-
-    @AfterThrowing(pointcut = "annotationStatisticPointCut()", throwing = "e")
-    public void saveStatisticAfterThrowing(JoinPoint joinPoint, Throwable e) {
-        Statistic annotation = ((MethodSignature) joinPoint.getSignature()).getMethod().getAnnotation(Statistic.class);
-        String annotationMessage = annotation.message();
-        Object[] args = joinPoint.getArgs();
-        String exceptionMessage = e.getMessage();
-        StatisticDto statisticDto = new StatisticDto(annotationMessage, args, exceptionMessage);
-        kafkaTemplate.send(KafkaConfig.STATISTIC_TOPIC_NAME, statisticDto);
     }
 }

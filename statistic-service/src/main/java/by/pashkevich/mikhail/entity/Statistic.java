@@ -15,9 +15,6 @@ import java.time.LocalDateTime;
 public class Statistic {
     @Id
     private String id;
-    private String message;
-    private Object[] args;
-    private Object result;
-    private String exception;
+    private Object battle;
     private LocalDateTime timestamp;
 }

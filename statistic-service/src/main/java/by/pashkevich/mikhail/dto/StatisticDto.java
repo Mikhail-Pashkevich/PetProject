@@ -11,9 +11,6 @@ import java.time.LocalDateTime;
 @Data
 public class StatisticDto {
     private String id;
-    private String message;
-    private Object[] args;
-    private Object result;
-    private String exception;
+    private Object battle;
     private LocalDateTime timestamp;
 }
