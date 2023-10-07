@@ -1,6 +1,6 @@
 package by.pashkevich.mikhail.repository;
 
-import by.pashkevich.mikhail.model.entity.ScheduleSetting;
+import by.pashkevich.mikhail.entity.setting.ScheduleSetting;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

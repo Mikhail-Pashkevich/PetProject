@@ -1,7 +1,7 @@
 package by.pashkevich.mikhail.repository;
 
-import by.pashkevich.mikhail.model.Role;
-import by.pashkevich.mikhail.model.enums.Rolename;
+import by.pashkevich.mikhail.entity.Role;
+import by.pashkevich.mikhail.entity.enums.Rolename;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

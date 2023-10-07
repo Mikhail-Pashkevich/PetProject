@@ -1,9 +1,10 @@
 package by.pashkevich.mikhail.service;
 
-import by.pashkevich.mikhail.model.User;
+import by.pashkevich.mikhail.entity.User;
 
 public interface UserService {
-    void create(User user);
 
-    User getAuthenticatedUser();
+    User create(User user);
+
+    boolean existsByUsername(String username);
 }

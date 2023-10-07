@@ -1,11 +1,11 @@
 package by.pashkevich.mikhail.controller;
 
-import by.pashkevich.mikhail.model.User;
+import by.pashkevich.mikhail.dto.UserDto;
+import by.pashkevich.mikhail.entity.User;
+import by.pashkevich.mikhail.mapper.UserMapper;
 import by.pashkevich.mikhail.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-
-import java.security.Principal;
 
 @RestController
 @RequestMapping("/user")
@@ -13,14 +13,17 @@ import java.security.Principal;
 public class UserController {
     private final UserService userService;
 
-
-    @GetMapping("/sign-in")
-    public Principal signIn(Principal user) {
-        return user;
-    }
+    private final UserMapper userMapper;
 
     @PostMapping("/sign-up")
-    public void signUp(@RequestBody User user) {
-        userService.create(user);
+    public UserDto signUp(@RequestBody UserDto dto) {
+        User user = userMapper.toEntity(dto);
+        user = userService.create(user);
+        return userMapper.toDto(user);
+    }
+
+    @GetMapping("/jwt/{jwt}")
+    public String getJwt(@PathVariable String jwt) {
+        return jwt;
     }
 }

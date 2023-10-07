@@ -1,10 +1,10 @@
 package by.pashkevich.mikhail.service.impl;
 
+import by.pashkevich.mikhail.entity.Field;
+import by.pashkevich.mikhail.entity.Step;
+import by.pashkevich.mikhail.entity.enums.BattleStatus;
+import by.pashkevich.mikhail.entity.enums.Value;
 import by.pashkevich.mikhail.exception.IncorrectDataException;
-import by.pashkevich.mikhail.model.entity.Field;
-import by.pashkevich.mikhail.model.entity.enums.BattleStatus;
-import by.pashkevich.mikhail.model.entity.enums.Value;
-import by.pashkevich.mikhail.model.util.Step;
 import by.pashkevich.mikhail.repository.FieldRepository;
 import by.pashkevich.mikhail.service.FieldService;
 import by.pashkevich.mikhail.service.FieldVerifyService;
@@ -38,7 +38,7 @@ public class FieldServiceImpl implements FieldService {
         return switch (value) {
             case VALUE_X -> BattleStatus.WAIT_FOR_MOVE_O;
             case VALUE_O -> BattleStatus.WAIT_FOR_MOVE_X;
-            default -> throw new IncorrectDataException("Can't process value: " + value);
+            default -> throw new IncorrectDataException("Can't process value: %s", value.name());
         };
     }
 
