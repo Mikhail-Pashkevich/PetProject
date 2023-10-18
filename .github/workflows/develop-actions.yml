@@ -1,0 +1,77 @@
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-gradle
+
+name: PetProject actions
+run-name: PetProject develop build
+
+# Delete '- add-github-actions' property before merge in develop
+on:
+  push:
+    branches:
+      - develop
+      - add-github-actions
+  pull_request:
+    branches:
+      - develop
+      - add-github-actions
+
+jobs:
+
+  # build battle-service
+  battle-service:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout develop branch
+        uses: actions/checkout@v3
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: 17
+          distribution: corretto
+
+      - name: Build battle-service by Gradle
+        uses: gradle/gradle-build-action@v2
+        with:
+          gradle-version: 7.4
+          build-root-directory: battle-service
+          arguments: build
+
+  # build user-service
+  user-service:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout develop branch
+        uses: actions/checkout@v3
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: 17
+          distribution: corretto
+
+      - name: Build user-service by Gradle
+        uses: gradle/gradle-build-action@v2
+        with:
+          gradle-version: 7.4
+          build-root-directory: user-service
+          arguments: build
+
+  # build statistic-service
+  statistic-service:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout develop branch
+        uses: actions/checkout@v3
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: 17
+          distribution: corretto
+
+      - name: Build statistic-service by Gradle
+        uses: gradle/gradle-build-action@v2
+        with:
+          gradle-version: 7.4
+          build-root-directory: statistic-service
+          arguments: build
