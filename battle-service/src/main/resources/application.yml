@@ -15,13 +15,14 @@ spring:
       resourceserver:
         jwt:
           issuer-uri: https://accounts.google.com
+  kafka:
+    bootstrap-servers: ${KAFKA_HOST:localhost}:${KAFKA_PORT:9092}
+    producer:
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties:
+        spring.json.type.mapping: statisticDto:by.pashkevich.mikhail.dto.StatisticDto
 
 logging:
   level:
     org.hibernate.SQL: DEBUG
     org.hibernate.type.descriptor.sql.BasicBinder: TRACE
-
-app:
-  vars:
-    statistic:
-      url: http://${STATISTIC_HOST:localhost}:${STATISTIC_PORT:8082}

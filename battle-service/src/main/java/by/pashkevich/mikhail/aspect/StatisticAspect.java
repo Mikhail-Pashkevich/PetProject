@@ -1,12 +1,13 @@
 package by.pashkevich.mikhail.aspect;
 
-import by.pashkevich.mikhail.client.StatisticClient;
+import by.pashkevich.mikhail.config.KafkaConfig;
 import by.pashkevich.mikhail.dto.StatisticDto;
 import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 
 @Aspect
@@ -14,7 +15,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class StatisticAspect {
 
-    private final StatisticClient statisticClient;
+    private final KafkaTemplate<Object, Object> kafkaTemplate;
 
     @Pointcut("execution(public * by.pashkevich.mikhail.repository.BattleRepository.save(*))")
     public void executionBattleRepositorySavePointCut() {
@@ -22,10 +23,9 @@ public class StatisticAspect {
 
     @Around("executionBattleRepositorySavePointCut()")
     public Object saveStatisticAround(ProceedingJoinPoint joinPoint) throws Throwable {
-        Object[] args = joinPoint.getArgs();
         Object result = joinPoint.proceed();
-        StatisticDto statisticDto = new StatisticDto(args[0]);
-        statisticClient.save(statisticDto);
+        StatisticDto statisticDto = new StatisticDto(result);
+        kafkaTemplate.send(KafkaConfig.STATISTIC_TOPIC_NAME, statisticDto);
         return result;
     }
 }
