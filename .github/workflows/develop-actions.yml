@@ -43,6 +43,12 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
+      - name: Build and push image
+        uses: docker/build-push-action@v5
+        with:
+          push: true
+          tags: petproject/battle:latest
+
   # build user-service
   user-service:
     runs-on: ubuntu-latest
