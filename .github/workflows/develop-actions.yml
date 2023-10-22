@@ -47,7 +47,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: battle-service
-          file: /battle-service/.docker/remote/Dockerfile
+          file: /Dockerfile
           push: true
           tags: mikhailpashkevich/petproject:latest
 
