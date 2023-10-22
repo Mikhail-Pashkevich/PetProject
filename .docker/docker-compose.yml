@@ -16,8 +16,8 @@ services:
   pp-battle:
     container_name: pp-battle
     build:
-      context: /battle-service
-      dockerfile: /Dockerfile
+      context: ../battle-service
+      dockerfile: Dockerfile
     restart: unless-stopped
     env_file:
       - .env
@@ -31,8 +31,8 @@ services:
   pp-user:
     container_name: pp-user
     build:
-      context: /user-service
-      dockerfile: /Dockerfile
+      context: ../user-service
+      dockerfile: Dockerfile
     restart: unless-stopped
     env_file:
       - .env
@@ -46,8 +46,8 @@ services:
   pp-statistic:
     container_name: pp-statistic
     build:
-      context: /statistic-service
-      dockerfile: /Dockerfile
+      context: ../statistic-service
+      dockerfile: Dockerfile
     restart: unless-stopped
     env_file:
       - .env
