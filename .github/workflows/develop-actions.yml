@@ -48,7 +48,7 @@ jobs:
         with:
           context: battle-service
           push: true
-          tags: battle:latest
+          tags: petproject:latest
 
   # build user-service
   user-service:
