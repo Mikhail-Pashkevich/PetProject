@@ -48,7 +48,7 @@ jobs:
         with:
           context: battle-service
           push: true
-          tags: petproject:latest
+          tags: mikhailpashkevich/petproject:latest
 
   # build user-service
   user-service:
