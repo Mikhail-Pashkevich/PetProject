@@ -1,4 +1,4 @@
 cd ..
 
-docker-compose build
-docker-compose up -d
+docker-compose --profile local build
+docker-compose --profile local up -d

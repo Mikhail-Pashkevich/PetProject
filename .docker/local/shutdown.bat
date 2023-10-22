@@ -1,3 +1,3 @@
 cd ..
 
-docker-compose down
+docker-compose --profile local down

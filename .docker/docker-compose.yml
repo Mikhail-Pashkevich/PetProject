@@ -1,6 +1,9 @@
 version: '3'
 services:
   pp-mysql:
+    profiles:
+      - local
+      - docker_hub
     hostname: pp-mysql
     container_name: pp-mysql
     image: mysql:8.1.0
@@ -14,6 +17,8 @@ services:
       - pp-network
 
   pp-battle:
+    profiles:
+      - local
     container_name: pp-battle
     build:
       context: ../battle-service
@@ -29,6 +34,8 @@ services:
       - pp-network
 
   pp-user:
+    profiles:
+      - local
     container_name: pp-user
     build:
       context: ../user-service
@@ -44,10 +51,57 @@ services:
       - pp-network
 
   pp-statistic:
+    profiles:
+      - local
     container_name: pp-statistic
     build:
       context: ../statistic-service
       dockerfile: .docker/Dockerfile
+    restart: unless-stopped
+    env_file:
+      - .env
+    ports:
+      - ${STATISTIC_PORT}:${STATISTIC_PORT}
+    depends_on:
+      - pp-mysql
+    networks:
+      - pp-network
+
+  pp-battle_docker_hub:
+    profiles:
+      - docker_hub
+    container_name: pp-battle
+    image: mikhailpashkevich/battle-service:latest
+    restart: unless-stopped
+    env_file:
+      - .env
+    ports:
+      - 8080:${BATTLE_PORT}
+    depends_on:
+      - pp-mysql
+    networks:
+      - pp-network
+
+  pp-user_docker_hub:
+    profiles:
+      - docker_hub
+    container_name: pp-user
+    image: mikhailpashkevich/user-service:latest
+    restart: unless-stopped
+    env_file:
+      - .env
+    ports:
+      - ${USER_PORT}:${USER_PORT}
+    depends_on:
+      - pp-mysql
+    networks:
+      - pp-network
+
+  pp-statistic_docker_hub:
+    profiles:
+      - docker_hub
+    container_name: pp-statistic
+    image: mikhailpashkevich/statistic-service:latest
     restart: unless-stopped
     env_file:
       - .env
