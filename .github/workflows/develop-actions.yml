@@ -46,7 +46,6 @@ jobs:
       - name: Build and push image
         uses: docker/build-push-action@v5
         with:
-          context: battle-service
           file: battle-service/.docker/remote/Dockerfile
           push: true
           tags: petproject/battle:latest
