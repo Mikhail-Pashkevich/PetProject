@@ -1,0 +1,110 @@
+def BATTLE_SERVICE = "battle-service"
+def USER_SERVICE = "user-service"
+def STATISTIC_SERVICE = "statistic-service"
+
+def DOCKER_HUB_TAG = "jenkins-latest"
+
+pipeline {
+    agent none
+    options {
+        timestamps()
+    }
+    environment {
+        DOCKER_LOGIN = credentials("docker_login")
+        DOCKER_PASSWORD = credentials("docker_password")
+    }
+    stages {
+        stage("Build") {
+            parallel {
+                stage("Build battle-service") {
+                    agent {
+                        docker {
+                            image "gradle:7.4-jdk17-alpine"
+                        }
+                    }
+                    steps {
+                        dir(BATTLE_SERVICE) {
+                            sh "gradle build"
+                        }
+                    }
+                }
+                stage("Build user-service") {
+                    agent {
+                        docker {
+                            image "gradle:7.4-jdk17-alpine"
+                        }
+                    }
+                    steps {
+                        dir(USER_SERVICE) {
+                            sh "gradle build"
+                        }
+                    }
+                }
+                stage("Build statistic-service") {
+                    agent {
+                        docker {
+                            image "gradle:7.4-jdk17-alpine"
+                        }
+                    }
+                    steps {
+                        dir(STATISTIC_SERVICE) {
+                            sh "gradle build"
+                        }
+                    }
+                }
+            }
+        }
+        stage("Log in Docker Hub") {
+            agent any
+            steps {
+                sh "docker login -u ${DOCKER_LOGIN} -p ${DOCKER_PASSWORD}"
+            }
+        }
+        stage("Build and push image") {
+            parallel {
+                stage("Build and push battle-service") {
+                    agent any
+                    environment {
+                        DOCKER_IMAGE_TAG = "${DOCKER_LOGIN}/${BATTLE_SERVICE}:${DOCKER_HUB_TAG}"
+                    }
+                    steps {
+                        dir(BATTLE_SERVICE) {
+                            sh "docker build . --file .docker/Dockerfile --tag ${DOCKER_IMAGE_TAG}"
+                            sh "docker image push ${DOCKER_IMAGE_TAG}"
+                        }
+                    }
+                }
+                stage("Build and push user-service") {
+                    agent any
+                    environment {
+                        DOCKER_IMAGE_TAG = "${DOCKER_LOGIN}/${USER_SERVICE}:${DOCKER_HUB_TAG}"
+                    }
+                    steps {
+                        dir(USER_SERVICE) {
+                            sh "docker build . --file .docker/Dockerfile --tag ${DOCKER_IMAGE_TAG}"
+                            sh "docker image push ${DOCKER_IMAGE_TAG}"
+                        }
+                    }
+                }
+                stage("Build and push statistic-service") {
+                    agent any
+                    environment {
+                        DOCKER_IMAGE_TAG = "${DOCKER_LOGIN}/${STATISTIC_SERVICE}:${DOCKER_HUB_TAG}"
+                    }
+                    steps {
+                        dir(STATISTIC_SERVICE) {
+                            sh "docker build . --file .docker/Dockerfile --tag ${DOCKER_IMAGE_TAG}"
+                            sh "docker image push ${DOCKER_IMAGE_TAG}"
+                        }
+                    }
+                }
+            }
+        }
+        stage("Log out Docker Hub") {
+            agent any
+            steps {
+                sh "docker logout"
+            }
+        }
+    }
+}
